@@ -1,5 +1,6 @@
 var assert = require('chai').assert;
 var jackrabbit = require('..');
+var Queue = require('../lib/queue');
 
 var RABBIT_URL = process.env.RABBIT_URL || 'amqp://localhost';
 
@@ -22,6 +23,11 @@ describe('jackrabbit', function() {
           this.broker = jackrabbit(RABBIT_URL);
           this.broker.once('connected', done);
         });
+
+        it('should emit "disconnected" when you close the connection', function(done) {
+          this.broker.once('disconnected', done);
+          this.broker.close();
+        })
       });
 
       describe('with an unreachable service', function() {
@@ -48,8 +54,14 @@ describe('jackrabbit', function() {
 
   describe('#queue', function() {
 
-    it('should return a new Queue instance', function() {
+    before(function connect(done) {
+      this.broker = jackrabbit(RABBIT_URL);
+      this.broker.once('connected', done);
+    });
 
+    it('should return a new Queue instance', function() {
+      var queue = this.broker.queue('test.queue');
+      assert.instanceOf(queue, Queue);
     });
   })
 });
