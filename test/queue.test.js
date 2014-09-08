@@ -25,6 +25,16 @@ describe('jackrabbit', function() {
           var queue = this.broker.queue('test.queue');
           queue.on('ready', done);
         });
+
+        it('defaults to a durable queue', function() {
+          var queue = this.broker.queue('test.queue');
+          assert.equal(queue.durable, true);
+        });
+
+        it('defaults to a prefetch of 1', function() {
+          var queue = this.broker.queue('test.queue');
+          assert.equal(queue.prefetch, 1);
+        });
       });
     });
   });
