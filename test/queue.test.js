@@ -45,10 +45,40 @@ describe('jackrabbit', function() {
       });
     });
 
-    describe('with prefetch of 5 in options', function() {
+    describe('with prefetch of 1', function() {
 
       before(function createQueue(done) {
-        this.queue = this.broker.queue(QUEUE_NAME + '.prefetch', { prefetch: 5 });
+        this.queue = this.broker.queue(QUEUE_NAME + '.prefetch1', { prefetch: 1 });
+        this.queue.on('ready', done);
+      });
+
+      before(function publishTen() {
+        var i = 10;
+        while (i--) this.queue.publish({ remaining: i });
+      });
+
+      it('returns a queue with prefetch of 1', function() {
+        assert.equal(this.queue.prefetch, 1);
+      });
+
+      it('fetches 1 messages before pausing', function(done) {
+        var i = 0;
+        setTimeout(function checkFetched() {
+          assert.equal(i, 1);
+          done();
+        }, 50);
+        this.queue.subscribe(function handler(msg, acknowledge) {
+          i++;
+          assert.equal(msg.remaining, 10 - i);
+          if (i > 1) throw new Error('Prefetched more than 1');
+        });
+      });
+    });
+
+    describe('with prefetch of 5', function() {
+
+      before(function createQueue(done) {
+        this.queue = this.broker.queue(QUEUE_NAME + '.prefetch5', { prefetch: 5 });
         this.queue.on('ready', done);
       });
 
