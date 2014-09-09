@@ -10,7 +10,7 @@ queue.on('connected', function() {
 
   function onReady() {
     queue.handle('jobs.greet', onJob);
-    queue.publish({ name: 'Hunter' });
+    queue.publish('jobs.greet', { name: 'Hunter' });
   }
 
   function onJob(job, ack) {
