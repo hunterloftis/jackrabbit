@@ -46,6 +46,44 @@ describe('jackrabbit', function() {
     });
   });
 
+  describe('#ignore', function() {
+
+    before(function connect(done) {
+      this.queue = jackrabbit(util.RABBIT_URL, 1);
+      this.queue.once('connected', done);
+    });
+
+    before(function createQueue(done) {
+      this.name = util.NAME + '.ignore';
+      this.queue.create(this.name, done);
+    });
+
+    before(function startHandling() {
+      this.messages = [];
+      this.queue.handle(this.name, function handler(msg, ack) {
+        this.messages.push(msg);
+        ack();
+      }.bind(this));
+    });
+
+    it('should start out handling a queue', function(done) {
+      this.queue.publish(this.name, { foo: 'bar' });
+      setTimeout(function() {
+        assert.lengthOf(this.messages, 1);
+        done();
+      }.bind(this), 50);
+    });
+
+    it('should stop handling the queue after calling ignore', function(done) {
+      this.queue.ignore(this.name);
+      this.queue.publish(this.name, { foo: 'bar' });
+      setTimeout(function() {
+        assert.lengthOf(this.messages, 1);
+        done();
+      }.bind(this), 50);
+    });
+  });
+
   describe('with prefetch 1', function() {
 
     before(function connect(done) {
