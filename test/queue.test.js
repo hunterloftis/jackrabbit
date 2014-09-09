@@ -141,15 +141,4 @@ describe('jackrabbit', function() {
       });
     });
   });
-
-  after(function connect(done) {
-    this.queue = jackrabbit(util.RABBIT_URL);
-    this.queue.once('connected', done);
-  });
-
-  after(function cleanup(done) {
-    QUEUES.forEach(function(name) {
-      this.queue.destroy(name);
-    }.bind(this));
-  });
 });
