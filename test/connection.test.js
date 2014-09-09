@@ -20,35 +20,50 @@ describe('jackrabbit', function() {
         this.timeout(5000);
 
         it('emits "connected" on connection', function(done) {
-          this.broker = jackrabbit(RABBIT_URL);
-          this.broker.once('connected', done);
+          this.queue = jackrabbit(RABBIT_URL);
+          this.queue.once('connected', done);
         });
 
         it('emits "disconnected" when you close the connection', function(done) {
-          this.broker.once('disconnected', done);
-          this.broker.close();
+          this.queue.once('disconnected', done);
+          this.queue.close();
         })
       });
 
       describe('with an unreachable service', function() {
 
         it('emits "error"', function(done) {
-          var broker = jackrabbit('amqp://doesntexist');
-          broker.once('error', function(err) {
+          var queue = jackrabbit('amqp://doesntexist');
+          queue.once('error', function(err) {
             assert.ok(err);
             done();
           });
         });
 
         it('emits "disconnected"', function(done) {
-          var broker = jackrabbit('amqp://doesntexist');
-          broker.once('error', function() {});
-          broker.once('disconnected', function() {
+          var queue = jackrabbit('amqp://doesntexist');
+          queue.once('error', function() {});
+          queue.once('disconnected', function() {
             done();
           });
         });
       });
     });
 
+    describe('without a prefetch value', function() {
+
+      it('sets prefetch to 1', function() {
+        var queue = jackrabbit(RABBIT_URL);
+        assert.equal(queue.prefetch, 1);
+      });
+    });
+
+    describe('with a prefetch value of 5', function() {
+
+      it('sets prefetch to 5', function() {
+        // var queue = jackrabbit(RABBIT_URL, 5);
+        // assert.equal(queue.prefetch, 5);
+      });
+    });
   });
 });
