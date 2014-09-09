@@ -1,8 +1,7 @@
 var assert = require('chai').assert;
 var jackrabbit = require('..');
 var Queue = require('../lib/queue');
-
-var RABBIT_URL = process.env.RABBIT_URL || 'amqp://localhost';
+var util = require('./util');
 
 describe('jackrabbit', function() {
 
@@ -20,7 +19,7 @@ describe('jackrabbit', function() {
         this.timeout(5000);
 
         it('emits "connected" on connection', function(done) {
-          this.queue = jackrabbit(RABBIT_URL);
+          this.queue = jackrabbit(util.RABBIT_URL);
           this.queue.once('connected', done);
         });
 
@@ -53,7 +52,7 @@ describe('jackrabbit', function() {
     describe('without a prefetch value', function() {
 
       it('sets prefetch to 1', function() {
-        var queue = jackrabbit(RABBIT_URL);
+        var queue = jackrabbit(util.RABBIT_URL);
         assert.equal(queue.prefetch, 1);
       });
     });
@@ -61,7 +60,7 @@ describe('jackrabbit', function() {
     describe('with a prefetch value of 5', function() {
 
       it('sets prefetch to 5', function() {
-        var queue = jackrabbit(RABBIT_URL, 5);
+        var queue = jackrabbit(util.RABBIT_URL, 5);
         assert.equal(queue.prefetch, 5);
       });
     });
