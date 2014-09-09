@@ -106,7 +106,7 @@ describe('jackrabbit', function() {
       });
 
       it('calls back without error', function(done) {
-        this.broker.destroy(this.name, function(err, destroyed) {
+        this.queue.destroy(this.name, function(err, destroyed) {
           this.destroyed = destroyed;
           done(err);
         }.bind(this));
@@ -124,7 +124,7 @@ describe('jackrabbit', function() {
     describe("with a queue that doesn't exist", function() {
 
       it('calls back without error', function(done) {
-        this.broker.destroy('nonexistant.queue', function(err, destroyed) {
+        this.queue.destroy('nonexistant.queue', function(err, destroyed) {
           this.destroyed = destroyed;
           done(err);
         }.bind(this));
@@ -143,13 +143,13 @@ describe('jackrabbit', function() {
   });
 
   after(function connect(done) {
-    this.broker = jackrabbit(util.RABBIT_URL);
-    this.broker.once('connected', done);
+    this.queue = jackrabbit(util.RABBIT_URL);
+    this.queue.once('connected', done);
   });
 
   after(function cleanup(done) {
     QUEUES.forEach(function(name) {
-      this.broker.destroy(name);
+      this.queue.destroy(name);
     }.bind(this));
   });
 });
