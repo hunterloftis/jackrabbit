@@ -61,8 +61,8 @@ describe('jackrabbit', function() {
     describe('with a prefetch value of 5', function() {
 
       it('sets prefetch to 5', function() {
-        // var queue = jackrabbit(RABBIT_URL, 5);
-        // assert.equal(queue.prefetch, 5);
+        var queue = jackrabbit(RABBIT_URL, 5);
+        assert.equal(queue.prefetch, 5);
       });
     });
   });
