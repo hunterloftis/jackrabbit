@@ -108,6 +108,5 @@ queue.ignore(name)
 
 ## Tests
 
-```
-npm test
-```
+1. Run rabbit on 'amqp://localhost'
+2. `npm test`
