@@ -106,6 +106,17 @@ queue.ignore(name)
 
 - name: name of the queue
 
+#### purge
+
+Purge a queue.
+
+```js
+queue.purge(name, callback);
+```
+
+- name: name of the queue
+- callback: Function to be called on completion with (err, countOfPurgedMessages)
+
 ## Tests
 
 1. Run rabbit on 'amqp://localhost'
