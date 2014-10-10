@@ -163,47 +163,73 @@ describe('jackrabbit', function() {
   });
 
   describe('#purge', function() {
-    before(function connect(done) {
-      this.queue = jackrabbit(util.RABBIT_URL, 1);
-      this.queue.once('connected', done);
+    describe('with five pending messages', function() {
+      before(function connect(done) {
+        this.queue = jackrabbit(util.RABBIT_URL, 1);
+        this.queue.once('connected', done);
+      });
+
+      before(function createQueue(done) {
+        this.name = util.NAME + '.purgeFive';
+        this.queue.create(this.name, done);
+      });
+
+      before(function queueMessages() {
+        for (var i = 0; i < 5; i++) {
+          this.queue.publish(this.name, { index: i });
+        }
+      });
+
+      it('purges without error', function(done) {
+        this.queue.purge(this.name, function onPurge(err, count) {
+          assert.ok(!err);
+          this.count = count;
+          done();
+        }.bind(this));
+      });
+
+      it('counts 5 purged messages', function() {
+        assert.equal(this.count, 5);
+      });
+
+      it('receives 0 messages', function(done) {
+        setTimeout(countIt.bind(this), 50);
+
+        this.messages = [];
+        this.queue.handle(this.name, function handler(msg, ack) {
+          this.messages.push(msg);
+          ack();
+        }.bind(this));
+
+        function countIt() {
+          assert.lengthOf(this.messages, 0);
+          done();
+        }
+      });
     });
 
-    before(function createQueue(done) {
-      this.name = util.NAME + '.purge';
-      this.queue.create(this.name, done);
-    });
+    describe('with no pending messages', function() {
+      before(function connect(done) {
+        this.queue = jackrabbit(util.RABBIT_URL, 1);
+        this.queue.once('connected', done);
+      });
 
-    before(function queueMessages() {
-      for (var i = 0; i < 5; i++) {
-        this.queue.publish(this.name, { index: i });
-      }
-    });
+      before(function createQueue(done) {
+        this.name = util.NAME + '.purgeEmpty';
+        this.queue.create(this.name, done);
+      });
 
-    it('purges without error', function(done) {
-      this.queue.purge(this.name, function onPurge(err, count) {
-        assert.ok(!err);
-        this.count = count;
-        done();
-      }.bind(this));
-    });
+      it('purges without error', function(done) {
+        this.queue.purge(this.name, function onPurge(err, count) {
+          assert.ok(!err);
+          this.count = count;
+          done();
+        }.bind(this));
+      });
 
-    it('counts 5 purged messages', function() {
-      assert.equal(this.count, 5);
-    });
-
-    it('receives 0 messages', function(done) {
-      setTimeout(countIt.bind(this), 50);
-
-      this.messages = [];
-      this.queue.handle(this.name, function handler(msg, ack) {
-        this.messages.push(msg);
-        ack();
-      }.bind(this));
-
-      function countIt() {
-        assert.lengthOf(this.messages, 0);
-        done();
-      }
+      it('counts 0 purged messages', function() {
+        assert.equal(this.count, 0);
+      });
     });
   });
 });
