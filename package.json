@@ -14,7 +14,7 @@
   "repository": "hunterloftis/jackrabbit",
   "homepage": "https://github.com/hunterloftis/jackrabbit",
   "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
-  "main": "jackrabbit.js",
+  "main": "lib/jackrabbit.js",
   "scripts": {
     "test": "mocha"
   },

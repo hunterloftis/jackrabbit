@@ -12,5 +12,6 @@ queue.on('connected', function() {
   function onJob(job, ack) {
     console.log('Hello, ' + job.name);
     ack();
+    process.exit();
   }
 });

@@ -17,7 +17,7 @@ describe('jackrabbit', function() {
       this.queue.create(this.name, done);
     });
 
-    it('should send five messages without error', function() {
+    it('sends five messages without error', function() {
       for (var i = 0; i < 5; i++) {
         this.queue.publish(this.name, { index: i });
       }
@@ -34,11 +34,11 @@ describe('jackrabbit', function() {
         }.bind(this));
       });
 
-      it('should receive five messages', function() {
+      it('receives five messages', function() {
         assert.lengthOf(this.messages, 5);
       });
 
-      it('should receive messages in order', function() {
+      it('receives messages in order', function() {
         for (var i = 0; i < 5; i++) {
           assert.equal(this.messages[i].index, i);
         }
@@ -66,7 +66,7 @@ describe('jackrabbit', function() {
       }.bind(this));
     });
 
-    it('should start out handling a queue', function(done) {
+    it('starts out handling a queue', function(done) {
       this.queue.publish(this.name, { foo: 'bar' });
       setTimeout(function() {
         assert.lengthOf(this.messages, 1);
@@ -74,7 +74,7 @@ describe('jackrabbit', function() {
       }.bind(this), 50);
     });
 
-    it('should stop handling the queue after calling ignore', function(done) {
+    it('stops handling the queue after calling ignore', function(done) {
       this.queue.ignore(this.name);
       this.queue.publish(this.name, { foo: 'bar' });
       setTimeout(function() {
@@ -159,6 +159,51 @@ describe('jackrabbit', function() {
         assert.equal(msg.remaining, 10 - i);
         if (i > 5) throw new Error('Prefetched more than 5');
       });
+    });
+  });
+
+  describe('#purge', function() {
+    before(function connect(done) {
+      this.queue = jackrabbit(util.RABBIT_URL, 1);
+      this.queue.once('connected', done);
+    });
+
+    before(function createQueue(done) {
+      this.name = util.NAME + '.purge';
+      this.queue.create(this.name, done);
+    });
+
+    before(function queueMessages() {
+      for (var i = 0; i < 5; i++) {
+        this.queue.publish(this.name, { index: i });
+      }
+    });
+
+    it('purges without error', function(done) {
+      this.queue.purge(this.name, function onPurge(err, count) {
+        assert.ok(!err);
+        this.count = count;
+        done();
+      }.bind(this));
+    });
+
+    it('counts 5 purged messages', function() {
+      assert.equal(this.count, 5);
+    });
+
+    it('receives 0 messages', function(done) {
+      setTimeout(countIt.bind(this), 50);
+
+      this.messages = [];
+      this.queue.handle(this.name, function handler(msg, ack) {
+        this.messages.push(msg);
+        ack();
+      }.bind(this));
+
+      function countIt() {
+        assert.lengthOf(this.messages, 0);
+        done();
+      }
     });
   });
 });
