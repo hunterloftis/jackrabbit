@@ -1,6 +1,6 @@
 {
   "name": "jackrabbit",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Simple AMQP / RabbitMQ job queues for node",
   "keywords": [
     "amqp",
