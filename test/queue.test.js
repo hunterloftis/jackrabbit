@@ -16,8 +16,9 @@ describe('jackrabbit', function() {
 
       before(function create(done) {
         this.name = util.NAME;
-        this.queue.create(this.name, function(err, instance) {
+        this.queue.create(this.name, function(err, instance, info) {
           this.instance = instance;
+          this.info = info;
           done(err);
         }.bind(this));
       });
@@ -32,6 +33,14 @@ describe('jackrabbit', function() {
 
       it('defaults to a durable queue', function() {
         assert.equal(this.instance.durable, true);
+      });
+	  
+      it('server queue name matches', function() {
+        assert.equal(this.info.queue, this.name);
+      });
+	  
+      it('doesnt have awaiting messages', function() {
+        assert.equal(this.info.messageCount, 0);
       });
 
     });
