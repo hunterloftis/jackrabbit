@@ -52,7 +52,8 @@ queue.create(name, options, callback)
 - name: name of the queue (eg, 'jobs.scrape')
 - options: object with...
   - durable (Boolean, default = true)
-- callback: callback function for result (err, queue_instance)
+  - prefetch (Number, default = 1)
+- callback: callback function for result (err, queue_instance, queue_info)
 
 #### destroy
 
