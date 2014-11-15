@@ -25,7 +25,8 @@
   "license": "MIT",
   "dependencies": {
     "amqplib": "^0.2.1",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "node-uuid": "^1.4.1"
   },
   "devDependencies": {
     "chai": "^1.9.1",

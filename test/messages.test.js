@@ -23,18 +23,6 @@ describe('jackrabbit', function() {
       }
     });
 
-    it('sends five messages and receives acks without error', function(done) {
-      var acks = 0;
-      for (var i = 0; i < 5; i++) {
-        this.queue.publish(this.name, { index: 5 + i }, function () {
-          ++acks;
-          if (acks === 5) {
-            done();
-          }
-        });
-      }
-    });
-
     describe('#handle', function() {
 
       before(function(done) {
@@ -47,11 +35,11 @@ describe('jackrabbit', function() {
       });
 
       it('receives five messages', function() {
-        assert.lengthOf(this.messages, 10);
+        assert.lengthOf(this.messages, 5);
       });
 
       it('receives messages in order', function() {
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 5; i++) {
           assert.equal(this.messages[i].index, i);
         }
       });
