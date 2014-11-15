@@ -31,9 +31,9 @@ describe('jackrabbit', function() {
 
       describe('with an unreachable service', function() {
 
-        it('emits "error"', function(done) {
+        it('emits "disconnected"', function(done) {
           var queue = jackrabbit('amqp://doesntexist');
-          queue.once('error', function(err) {
+          queue.once('disconnected', function(err) {
             assert.ok(err);
             done();
           });
