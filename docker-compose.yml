@@ -1,0 +1,8 @@
+jackrabbit:
+  build: .
+  links:
+    - rabbit
+  environment:
+    RABBIT_URL: 'amqp://rabbit'
+rabbit:
+  image: rabbitmq

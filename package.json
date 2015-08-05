@@ -2,6 +2,7 @@
   "name": "jackrabbit",
   "version": "3.0.8",
   "description": "Simple AMQP / RabbitMQ job queues for node",
+  "readme": "https://github.com/hunterloftis/jackrabbit/blob/master/readme.md",
   "keywords": [
     "amqp",
     "rabbit",
@@ -24,14 +25,14 @@
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "^0.2.1",
-    "lodash": "^2.4.1",
+    "amqplib": "^0.3.2",
+    "lodash": "^3.10.1",
     "node-uuid": "^1.4.1"
   },
   "devDependencies": {
-    "chai": "^1.9.1",
+    "chai": "^3.2.0",
     "express": "^4.8.7",
-    "mocha": "^1.21.4",
-    "supertest": "^0.13.0"
+    "mocha": "^2.2.5",
+    "supertest": "^1.0.1"
   }
 }
