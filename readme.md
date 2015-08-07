@@ -83,16 +83,16 @@ queue.publish(name, message)
 - name: name of the queue
 - message: an Object that is your message / job to add to the queue. 
 
-By default, messages expire after a second on the queue. You can increase (or remove) the expiration timer with the `messageTtl` option passed to `queue.create`. 
+Messages expire after a second on the queue by default. You can increase (or remove) the expiration timer with the `messageTtl` option passed to `queue.create`. 
 
 ```js
 // messages published to this queue expire after 5 seconds
-var first_queue = queue.create('my-first-queue', {messageTtl: 5000}, callback);
+queue.create('my-first-queue', {messageTtl: 5000}, callback);
 ```
 
 ```js
 // messages published to this queue will never expire
-var second_queue = queue.create('my-second-queue, {messageTtl: undefined}, callback); 
+queue.create('my-second-queue', {messageTtl: undefined}, callback); 
 ```
 #### handle
 
