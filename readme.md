@@ -2,6 +2,16 @@
 
 Simple AMQP / RabbitMQ job queues for node
 
+## Tests
+
+The tests are set up with Docker + Docker-Compose,
+so you don't need to install rabbitmq (or even node)
+to run them:
+
+```
+docker-compose run jackrabbit npm test
+```
+
 ```js
 var queue = jackrabbit('amqp://localhost');
 
