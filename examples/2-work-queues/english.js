@@ -1,7 +1,7 @@
 var jackrabbit = require('../..');
 
 var rabbit = jackrabbit(process.env.RABBIT_URL);
-var exchange = rabbit.direct();
+var exchange = rabbit.nameless();
 var hello = exchange.queue({ name: 'task_queue', durable: true });
 
 hello.consume(onGreet);
