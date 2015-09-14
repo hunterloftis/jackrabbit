@@ -166,6 +166,16 @@ describe('jackrabbit', function(){
   });
 
   describe('#close', function() {
-
+    before(function(done) {
+      this.r = jackrabbit(process.env.RABBIT_URL);
+      this.r.once('connected', done);
+    });
+    it('emits a "close" event', function(done) {
+      this.r.close();
+      this.r.once('close', done);
+    });
+    it('clears the connection', function() {
+      assert.ok(!this.r.getInternals().connection);
+    });
   });
 });
