@@ -11,4 +11,5 @@ exchange
   .publish({ text: 'second queue 2' }, { key: 'lazy.pink.rabbit' })
   .publish({ text: 'discarded' }, { key: 'quick.brown.fox' })
   .publish({ text: 'discarded' }, { key: 'orange' })
-  .publish({ text: 'second queue 3' }, { key: 'lazy.orange.male.rabbit' });
+  .publish({ text: 'second queue 3' }, { key: 'lazy.orange.male.rabbit' })
+  .on('drain', rabbit.close);
