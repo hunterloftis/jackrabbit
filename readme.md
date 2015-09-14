@@ -10,7 +10,6 @@ var rabbit = jackrabbit(process.env.RABBIT_URL);
 
 rabbit
   .default()
-  .queue({ name: 'hello' })
   .publish('Hello World!', { key: 'hello' })
   .on('drain', rabbit.close);
 ```
