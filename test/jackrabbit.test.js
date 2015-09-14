@@ -100,10 +100,69 @@ describe('jackrabbit', function(){
         assert.equal(this.e.name, 'foobar.direct');
       });
     });
+    describe('before connection is established', function() {
+      it('passes the connection to the exchange', function(done) {
+        jackrabbit(process.env.RABBIT_URL)
+          .direct()
+          .once('connected', done);
+      })
+    });
+    describe('after connection is established', function() {
+      before(function(done) {
+        this.r = jackrabbit(process.env.RABBIT_URL);
+        this.r.once('connected', done);
+      });
+      it('passes the connection to the exchange', function(done) {
+        this.r
+          .direct()
+          .once('connected', done);
+      });
+    });
   });
 
   describe('#fanout', function() {
-
+    describe('without a "name" argument', function() {
+      before(function() {
+        var r = jackrabbit(process.env.RABBIT_URL);
+        this.e = r.fanout();
+      });
+      it('returns the direct exchange named "amq.fanout"', function() {
+        assert.ok(this.e.queue);
+        assert.ok(this.e.publish);
+        assert.equal(this.e.type, 'fanout');
+        assert.equal(this.e.name, 'amq.fanout');
+      });
+    });
+    describe('with a "name" argument of "foobar.fanout"', function() {
+      before(function() {
+        var r = jackrabbit(process.env.RABBIT_URL);
+        this.e = r.fanout('foobar.fanout');
+      });
+      it('returns a direct exchange named "foobar.fanout"', function() {
+        assert.ok(this.e.queue);
+        assert.ok(this.e.publish);
+        assert.equal(this.e.type, 'fanout');
+        assert.equal(this.e.name, 'foobar.fanout');
+      });
+    });
+    describe('before connection is established', function() {
+      it('passes the connection to the exchange', function(done) {
+        jackrabbit(process.env.RABBIT_URL)
+          .fanout()
+          .once('connected', done);
+      })
+    });
+    describe('after connection is established', function() {
+      before(function(done) {
+        this.r = jackrabbit(process.env.RABBIT_URL);
+        this.r.once('connected', done);
+      });
+      it('passes the connection to the exchange', function(done) {
+        this.r
+          .fanout()
+          .once('connected', done);
+      });
+    });
   });
 
   describe('#close', function() {
