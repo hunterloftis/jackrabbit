@@ -1,5 +1,8 @@
 jackrabbit:
-  build: .
+  image: node
+  working_dir: /code
+  volumes:
+    - .:/code
   links:
     - rabbit
   environment:

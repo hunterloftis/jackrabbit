@@ -2,32 +2,29 @@
 
 Simple AMQP / RabbitMQ job queues for node
 
-## Tests
-
-The tests are set up with Docker + Docker-Compose,
-so you don't need to install rabbitmq (or even node)
-to run them:
-
-```
-docker-compose run jackrabbit npm test
-```
+producer.js:
 
 ```js
-var queue = jackrabbit('amqp://localhost');
+var jackrabbit = require('jackrabbit');
+var rabbit = jackrabbit('amqp://localhost');
 
-queue.on('connected', function() {
-  queue.create('jobs.greet', { prefetch: 5 }, onReady);
+rabbit.assert('jobs.greet', { prefetch: 5 });
+rabbit.publish('jobs.greet', { name: 'Hunter' });
+```
 
-  function onReady() {
-    queue.handle('jobs.greet', onJob);
-    queue.publish('jobs.greet', { name: 'Hunter' });
-  }
+consumer.js:
 
-  function onJob(job, ack) {
-    console.log('Hello, ' + job.name);
-    ack();
-  }
-});
+```js
+var jackrabbit = require('jackrabbit');
+var rabbit = jackrabbit('amqp://localhost');
+
+rabbit.assert('jobs.greet', { prefetch: 5 });
+rabbit.handle('jobs.greet', onGreet);
+
+function onGreet(job, ack) {
+  console.log('Hello, ' + job.name);
+  ack();
+}
 ```
 
 ## Installation
@@ -36,45 +33,43 @@ queue.on('connected', function() {
 npm install --save jackrabbit
 ```
 
+## API
+
+First, create a jackrabbit instance,
+which takes an amqp url as its only parameter:
+
 ```js
 var jackrabbit = require('jackrabbit');
+var rabbit = jackrabbit('amqp://localhost');
 ```
 
-## Use
+#### assert
 
-First, create a queue and connect to an amqp server:
+Assert (or create) a queue.
 
 ```js
-var queue = jackrabbit(amqp_url, prefetch)
+rabbit.assert(name, options, callback)
 ```
 
-- amqp_url: eg, 'amqp://localhost'
-- prefetch: messages to prefetch (default = 1)
-
-#### create
-
-Create (or assert) a queue.
-
-```js
-queue.create(name, options, callback)
-```
-
-- name: name of the queue (eg, 'jobs.scrape')
-- options: object with...
+- name: String, queue name
+  - eg, 'my-fancy-awesome.queue'
+- options: Object (optional)
   - durable (Boolean, default = true)
   - prefetch (Number, default = 1)
-- callback: callback function for result (err, queue_instance, queue_info)
+- callback: Function (optional)
+  - fn(err, queueInstance, queueInfo)
 
 #### destroy
 
 Destroy a queue.
 
 ```js
-queue.destroy(name, callback)
+rabbit.destroy(name, callback)
 ```
 
-- name: name of the queue
-- callback: callback for result (err, destroyed)
+- name: String, queue name
+- callback: Function (optional)
+  - fn(err, destroyed)
 
 You can destroy queues that exist or don't exist;
 if you try to destroy a queue that doesn't exist,
@@ -86,11 +81,12 @@ destroyed = true.
 Publish a job to a queue.
 
 ```js
-queue.publish(name, message)
+rabbit.publish(name, message)
 ```
 
-- name: name of the queue
-- message: an Object that is your message / job to add to the queue
+- name: String, queue name
+- message: Object (optional)
+  - contents are passed to any handlers
 
 #### handle
 
@@ -130,5 +126,10 @@ queue.purge(name, callback);
 
 ## Tests
 
-1. Run rabbit on 'amqp://localhost'
-2. `npm test`
+The tests are set up with Docker + Docker-Compose,
+so you don't need to install rabbitmq (or even node)
+to run them:
+
+```
+$ docker-compose run jackrabbit npm test
+```
