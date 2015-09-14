@@ -17,7 +17,7 @@
   "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -R spec"
   },
   "engines": {
     "node": ">= 0.10.x"
