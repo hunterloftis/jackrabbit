@@ -1,12 +1,13 @@
-var jackrabbit = require('jackrabbit');
+var jackrabbit = require('../..');
 
-var rabbit = jackrabbit(RABBIT_URL);
+var rabbit = jackrabbit(process.env.RABBIT_URL);
 var exchange = rabbit.default();
-var rpc = exchange.queue({ name: 'rpc_queue', prefetch: 1 });
+var rpc = exchange.queue({ name: 'rpc_queue', prefetch: 1, durable: false });
 
 rpc.consume(onRequest);
 
 function onRequest(data, reply) {
+  console.log('got request for n:', data.n);
   reply({ result: fib(data.n) });
 }
 
