@@ -1,6 +1,6 @@
-var jackrabbit = require('jackrabbit');
+var jackrabbit = require('../..');
 
-var rabbit = jackrabbit(RABBIT_URL);
+var rabbit = jackrabbit(process.env.RABBIT_URL);
 var exchange = rabbit.direct('direct_logs');
 
 exchange.publish({ text: 'this is a harmless log' }, { key: 'info' });

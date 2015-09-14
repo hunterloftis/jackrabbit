@@ -1,6 +1,6 @@
-var jackrabbit = require('jackrabbit');
+var jackrabbit = require('../..');
 
-var rabbit = jackrabbit(RABBIT_URL);
+var rabbit = jackrabbit(process.env.RABBIT_URL);
 var exchange = rabbit.direct('direct_logs');
 var errors = exchange.queue({ exclusive: true, key: 'error' });
 var logs = exchange.queue({ exclusive: true, keys: ['info', 'warning'] });
