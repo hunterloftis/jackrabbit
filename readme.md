@@ -1,8 +1,8 @@
 # Jackrabbit
 
-Use RabbitMQ in Node.js without hating yourself.
+RabbitMQ in Node.js without hating life.
 
-producer.js:
+*producer.js:*
 
 ```js
 var jackrabbit = require('jackrabbit');
@@ -15,7 +15,7 @@ rabbit
   .on('drain', rabbit.close);
 ```
 
-consumer.js:
+*consumer.js:*
 
 ```js
 var jackrabbit = require('jackrabbit');
