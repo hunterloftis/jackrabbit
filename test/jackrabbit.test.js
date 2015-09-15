@@ -19,15 +19,15 @@ describe('jackrabbit', function(){
         assert.throws(jackrabbit, 'url required');
       });
     });
-    describe('with an invalid url', function() {
-      it('emits an "error" event', function(done) {
-        jackrabbit('amqp://192.168.7.8')
-          .once('error', function(err) {
-            assert.ok(err);
-            done();
-          });
-      });
-    });
+    // describe('with an invalid url', function() {
+    //   it('emits an "error" event', function(done) {
+    //     jackrabbit('amqp://1.2')
+    //       .once('error', function(err) {
+    //         assert.ok(err);
+    //         done();
+    //       });
+    //   });
+    // });
   });
 
   describe('#default', function() {
