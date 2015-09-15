@@ -1,7 +1,7 @@
 {
   "name": "jackrabbit",
   "version": "4.0.0",
-  "description": "Simple AMQP / RabbitMQ job queues for node",
+  "description": "Easy RabbitMQ for node",
   "readme": "https://github.com/hunterloftis/jackrabbit/blob/master/readme.md",
   "keywords": [
     "amqp",
@@ -31,8 +31,6 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "express": "^4.8.7",
-    "mocha": "^2.2.5",
-    "supertest": "^1.0.1"
+    "mocha": "^2.2.5"
   }
 }
