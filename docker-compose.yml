@@ -1,0 +1,11 @@
+jackrabbit:
+  image: node
+  working_dir: /code
+  volumes:
+    - .:/code
+  links:
+    - rabbit
+  environment:
+    RABBIT_URL: 'amqp://rabbit'
+rabbit:
+  image: rabbitmq
