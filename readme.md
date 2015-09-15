@@ -30,6 +30,11 @@ function onMessage(data) {
 }
 ```
 
+## Use
+
+For now, the best usage help is found in the examples,
+which map 1-to-1 with the official RabbitMQ tutorials.
+
 ## Installation
 
 ```
