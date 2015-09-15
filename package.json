@@ -1,6 +1,6 @@
 {
   "name": "jackrabbit",
-  "version": "3.0.9",
+  "version": "4.0.0",
   "description": "Simple AMQP / RabbitMQ job queues for node",
   "readme": "https://github.com/hunterloftis/jackrabbit/blob/master/readme.md",
   "keywords": [
