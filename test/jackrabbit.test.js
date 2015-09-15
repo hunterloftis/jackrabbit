@@ -1,16 +1,16 @@
 var assert = require('chai').assert;
-var jackrabbit = require('..');
+var jackrabbit = require('../lib/jackrabbit');
 
 describe('jackrabbit', function(){
 
-  describe('#constructor', function() {
+  describe('constructor', function() {
     describe('with a valid server url', function() {
-      var r = jackrabbit(process.env.RABBIT_URL);
       it('emits a "connected" event', function(done) {
-        r.once('connected', done);
+        this.r = jackrabbit(process.env.RABBIT_URL);
+        this.r.once('connected', done);
       });
       it('references a Connection object', function() {
-        var c = r.getInternals().connection;
+        var c = this.r.getInternals().connection;
         assert.ok(c.connection.stream.writable);
       });
     });
