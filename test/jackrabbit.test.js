@@ -7,7 +7,10 @@ describe('jackrabbit', function(){
     describe('with a valid server url', function() {
       it('emits a "connected" event', function(done) {
         this.r = jackrabbit(process.env.RABBIT_URL);
-        this.r.once('connected', done);
+        this.r.once('connected', function (connection) {
+          assert.ok(connection.createChannel);
+          done();
+        });
       });
       it('references a Connection object', function() {
         var c = this.r.getInternals().connection;
@@ -59,18 +62,27 @@ describe('jackrabbit', function(){
       it('passes the connection to the exchange', function(done) {
         jackrabbit(process.env.RABBIT_URL)
           .default()
-          .once('connected', done);
+          .once('connected', function(channel) {
+            assert.ok(channel.consume);
+            done();
+          });
       })
     });
     describe('after connection is established', function() {
       before(function(done) {
         this.r = jackrabbit(process.env.RABBIT_URL);
-        this.r.once('connected', done);
+        this.r.once('connected', function (connection) {
+          assert.ok(connection.createChannel);
+          done();
+        });
       });
       it('passes the connection to the exchange', function(done) {
         this.r
           .default()
-          .once('connected', done);
+          .once('connected', function (channel) {
+            assert.ok(channel.consume);
+            done();
+          });
       });
     });
   });
@@ -104,18 +116,27 @@ describe('jackrabbit', function(){
       it('passes the connection to the exchange', function(done) {
         jackrabbit(process.env.RABBIT_URL)
           .direct()
-          .once('connected', done);
+          .once('connected', function (channel) {
+            assert.ok(channel.consume);
+            done();
+          });
       })
     });
     describe('after connection is established', function() {
       before(function(done) {
         this.r = jackrabbit(process.env.RABBIT_URL);
-        this.r.once('connected', done);
+        this.r.once('connected', function (connection) {
+          assert.ok(connection.createChannel);
+          done();
+        });
       });
       it('passes the connection to the exchange', function(done) {
         this.r
           .direct()
-          .once('connected', done);
+          .once('connected', function (channel) {
+            assert.ok(channel.consume);
+            done();
+          });
       });
     });
   });
@@ -149,18 +170,27 @@ describe('jackrabbit', function(){
       it('passes the connection to the exchange', function(done) {
         jackrabbit(process.env.RABBIT_URL)
           .fanout()
-          .once('connected', done);
+          .once('connected', function (channel) {
+            assert.ok(channel.consume);
+            done();
+          });
       })
     });
     describe('after connection is established', function() {
       before(function(done) {
         this.r = jackrabbit(process.env.RABBIT_URL);
-        this.r.once('connected', done);
+        this.r.once('connected', function (connection) {
+          assert.ok(connection.createChannel);
+          done();
+        });
       });
       it('passes the connection to the exchange', function(done) {
         this.r
           .fanout()
-          .once('connected', done);
+          .once('connected', function (channel) {
+            assert.ok(channel.consume);
+            done();
+          });
       });
     });
   });
@@ -168,11 +198,17 @@ describe('jackrabbit', function(){
   describe('#close', function() {
     before(function(done) {
       this.r = jackrabbit(process.env.RABBIT_URL);
-      this.r.once('connected', done);
+      this.r.once('connected', function (connection) {
+        assert.ok(connection.createChannel);
+        done();
+      });
     });
     it('emits a "close" event', function(done) {
       this.r.close();
-      this.r.once('close', done);
+      this.r.once('close', function (connection) {
+        assert.ok(connection.createChannel);
+        done();
+      });
     });
     it('clears the connection', function() {
       assert.ok(!this.r.getInternals().connection);
