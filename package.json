@@ -25,9 +25,9 @@
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "^0.3.2",
+    "amqplib": "0.4.0",
     "lodash": "^3.10.1",
-    "node-uuid": "^1.4.1"
+    "node-uuid": "1.4.7"
   },
   "devDependencies": {
     "chai": "^3.2.0",
