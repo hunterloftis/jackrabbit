@@ -13,7 +13,7 @@ var uuid = require('node-uuid');
 // variables
 var queueName = 'test-queue-many-routing-keys';
 
-describe.only('Queue creation', function () {
+describe('Queue creation', function () {
 	before(function establishConnectionToRabbitMQ(done) {
 		var that  = this;
 		this.r = jackrabbit(process.env.RABBIT_URL);
@@ -23,7 +23,7 @@ describe.only('Queue creation', function () {
 		});
 	});
 
-	it('should have all routingKeys functional', function (done) {
+	it('emits a "bound" event when all routing keys have been bound to the queue', function (done) {
 		var uniqueMessage = uuid.v4();  // messages are unique between tests
 		var exchange = this.e;
 		var options = {
@@ -38,7 +38,7 @@ describe.only('Queue creation', function () {
 			done();
 			ack();
 		}, {});
-		q.once('ready', function () {
+		q.once('bound', function () {
 			exchange.publish(uniqueMessage, { key: lastRoutingKey });
 		});
 	});
