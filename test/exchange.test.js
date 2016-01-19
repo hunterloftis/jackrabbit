@@ -1,6 +1,7 @@
 var assert = require('chai').assert;
 var amqp = require('amqplib/callback_api');
 var exchange = require('../lib/exchange');
+var uuid = require('node-uuid');
 
 describe('exchange', function() {
 
@@ -80,9 +81,38 @@ describe('exchange', function() {
         assert.ok(this.q.consume);
       });
     });
+
+    describe('with key bindings', function () {
+      before(function(done) {
+        amqp.connect(process.env.RABBIT_URL, function(err, conn) {
+          assert.ok(!err);
+          this.exchange = exchange('test.topic.bindings', 'topic')
+            .connect(conn)
+            .once('connected', done);
+        }.bind(this));
+      });
+
+    	it('emits a "bound" event when all routing keys have been bound to the queue', function (done) {
+        var keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
+        var finalKey = keys[keys.length - 1];
+        var queue = this.exchange.queue({ keys: keys });
+        var message = uuid.v4();
+
+    		queue.consume(function (data, ack, nack, msg) {
+    			assert.equal(message, data);
+    			assert.equal(msg.fields.routingKey, finalKey);
+    			ack();
+          done();
+    		});
+
+    		queue.once('bound', function () {
+    			this.exchange.publish(message, { key: finalKey });
+    		}.bind(this));
+    	});
+    });
   });
 
   describe('#publish', function() {
-    
+
   });
 });
