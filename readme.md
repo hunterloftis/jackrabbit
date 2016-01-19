@@ -30,6 +30,10 @@ function onMessage(data) {
 }
 ```
 
+Jackrabbit is designed for *simplicity* and an easy API.
+If you're an AMQP expert and want more power and flexibility,
+check out [https://github.com/LeanKit-Labs/wascally](wascally).
+
 ## Use
 
 For now, the best usage help is found in the examples,
