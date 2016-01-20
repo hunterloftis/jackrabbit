@@ -75,6 +75,34 @@ describe('queue', function() {
     });
 
   });
+
+  describe('purge', function() {
+
+    before(createConnection);
+
+    before(function() {
+      this.name = `test.queue.purge.${ uuid.v4() }`;
+      this.exchange = exchange('', 'direct')
+      this.exchange.connect(this.connection);
+      this.queue = queue({ name: this.name });
+      this.queue.connect(this.connection);
+    });
+
+    before(function(done) {
+      var n = 10;
+      while(n--) {
+        this.exchange.publish('test', { key: this.name });
+      }
+      setTimeout(done, 100);
+    });
+
+    it('returns the number of messages purged', function(done) {
+      this.queue.purge(function(err, count) {
+        assert.ok(count > 5);
+        done(err);
+      });
+    });
+  });
 });
 
 function createConnection(done) {
