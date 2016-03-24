@@ -2,6 +2,8 @@
 
 RabbitMQ in Node.js without hating life.
 
+## Simple Example
+
 *producer.js:*
 
 ```js
@@ -28,6 +30,24 @@ rabbit
 function onMessage(data) {
   console.log('received:', data);
 }
+```
+
+## Ack/Nack Consumer Example
+
+```js
+var jackrabbit = require('jackrabbit');
+var rabbit = jackrabbit(process.env.RABBIT_URL);
+
+rabbit
+  .default()
+  .queue({ name: 'important_job' })
+  .consume(function(data, ack, nack, msg) {
+    // process data...
+    // and ACK on success
+    ack();
+    // or alternatively NACK on failure
+    nack();
+  })
 ```
 
 Jackrabbit is designed for *simplicity* and an easy API.
