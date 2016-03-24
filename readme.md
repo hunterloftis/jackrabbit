@@ -54,9 +54,9 @@ Jackrabbit is designed for *simplicity* and an easy API.
 If you're an AMQP expert and want more power and flexibility,
 check out [wascally](https://github.com/LeanKit-Labs/wascally).
 
-## Use
+## More Examples
 
-For now, the best usage help is found in the examples,
+For now, the best usage help is can be found in [examples](https://github.com/hunterloftis/jackrabbit/tree/master/examples),
 which map 1-to-1 with the official RabbitMQ tutorials.
 
 ## Installation
