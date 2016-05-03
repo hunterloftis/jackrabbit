@@ -1,6 +1,6 @@
 # Jackrabbit
 
-RabbitMQ in Node.js without hating life.
+[RabbitMQ](https://www.rabbitmq.com/) in Node.js without hating life.
 
 *producer.js:*
 
