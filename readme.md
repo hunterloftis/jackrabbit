@@ -2,6 +2,8 @@
 
 RabbitMQ in Node.js without hating life.
 
+[![Build Status](https://travis-ci.org/pagerinc/jackrabbit.svg?branch=master)](https://travis-ci.org/pagerinc/jackrabbit)
+
 *producer.js:*
 
 ```js
