@@ -1,5 +1,5 @@
 {
-  "name": "@pager/jackrabbit",
+  "name": "jackrabbit",
   "version": "4.6.8",
   "description": "Easy RabbitMQ for node",
   "keywords": [
@@ -13,10 +13,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/pagerinc/jackrabbit.git"
+    "url": "git://github.com/hunterloftis/jackrabbit.git"
   },
-  "homepage": "https://github.com/pagerinc/jackrabbit",
-  "bugs": "https://github.com/pagerinc/jackrabbit/issues",
+  "homepage": "https://github.com/hunterloftis/jackrabbit",
+  "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
     "test": "mocha -R spec"
