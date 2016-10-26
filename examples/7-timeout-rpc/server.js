@@ -2,9 +2,8 @@ var jackrabbit = require('../..');
 
 var rabbit = jackrabbit(process.env.RABBIT_URL || 'amqp://localhost');
 var exchange = rabbit.default();
-var rpc = exchange.queue({ key: 'rpc_queue', name: 'rpc_queue', prefetch: 1, durable: false });
 
-rpc.consume(onRequest);
+exchange.rpcServer('rpc_queue', onRequest)
 
 function onRequest(data, reply) {
   console.log('got request for n:', data.n);
