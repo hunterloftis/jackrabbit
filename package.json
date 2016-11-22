@@ -25,12 +25,12 @@
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "0.4.2",
-    "lodash": "^4.13.1",
-    "node-uuid": "1.4.7"
+    "amqplib": "^0.5.1",
+    "lodash.assignin": "4.x.x",
+    "node-uuid": "1.x.x"
   },
   "devDependencies": {
     "chai": "3.x.x",
-    "mocha": "2.x.x"
+    "mocha": "3.x.x"
   }
 }
