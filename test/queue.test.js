@@ -1,6 +1,6 @@
 var assert = require('chai').assert;
 var amqp = require('amqplib/callback_api');
-var uuid = require('node-uuid');
+var uuid = require('uuid/v4');
 var exchange = require('../lib/exchange');
 var queue = require('../lib/queue');
 
@@ -11,7 +11,7 @@ describe('queue', function() {
     before(createConnection);
 
     before(function() {
-      this.name = `test.queue.consume.${ uuid.v4() }`;
+      this.name = `test.queue.consume.${ uuid() }`;
       this.exchange = exchange('', 'direct')
       this.exchange.connect(this.connection);
       this.queue = queue({ name: this.name });
@@ -19,7 +19,7 @@ describe('queue', function() {
     })
 
     it('calls the message handler when a message arrives', function(done) {
-      var message = uuid.v4();
+      var message = uuid();
       var n = 3;
       var received = 0;
 
@@ -42,7 +42,7 @@ describe('queue', function() {
     before(createConnection);
 
     before(function() {
-      this.name = `test.queue.cancel.${ uuid.v4() }`;
+      this.name = `test.queue.cancel.${ uuid() }`;
       this.exchange = exchange('', 'direct')
       this.exchange.connect(this.connection);
       this.queue = queue({ name: this.name });
@@ -50,7 +50,7 @@ describe('queue', function() {
     });
 
     it('initially consumes messages', function(done) {
-      var message = uuid.v4();
+      var message = uuid();
 
       this.queue.consume(onMessage, { noAck: true });
       this.exchange.publish(message, { key: this.name });
@@ -81,7 +81,7 @@ describe('queue', function() {
     before(createConnection);
 
     before(function() {
-      this.name = `test.queue.purge.${ uuid.v4() }`;
+      this.name = `test.queue.purge.${ uuid() }`;
       this.exchange = exchange('', 'direct')
       this.exchange.connect(this.connection);
       this.queue = queue({ name: this.name });
