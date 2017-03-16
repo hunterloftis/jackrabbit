@@ -63,7 +63,7 @@ async function Queue(connection, options) {
   const noAck = options.ack !== undefined ? !options.ack : true
   const channel = await connection.createChannel()
   const queue = await channel.assertQueue(options.name, options)
-  const instance = Object.assign(new EventEmitter(), { close, name: queue.queue })
+  const instance = Object.assign(new EventEmitter(), { close, bind, name: queue.queue })
   let consumerTag
 
   instance
@@ -80,6 +80,10 @@ async function Queue(connection, options) {
 
   async function close() {
     await channel.close()
+  }
+
+  async function bind(exchange, pattern) {
+    await channel.bindQueue(instance.name, exchange, pattern)
   }
 
   async function consume(event, listener) {
@@ -127,7 +131,7 @@ async function Exchange(connection, name, type, options) {
 
   async function queue(options) {
     const newQueue = await Queue(connection, options)
-    await channel.bindQueue(newQueue.name, name, options.bind)
+    await newQueue.bind(name, options.bind)
     instance.emit('queue', newQueue)
     return newQueue
   }
