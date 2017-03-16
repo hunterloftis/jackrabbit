@@ -200,3 +200,9 @@ async function randomlyFail(data) {
     }, 100)
   })
 }
+
+
+// configuration of dead letter exchange for failed (nacked) messages
+const broker = await jackrabbit(RABBIT_URL)
+const failed = await broker.exchange({ name: 'failed', durable: true })
+const queue = await jackrabbit(RABBIT_URL).queue({ deadLetterExchange: 'failed' })

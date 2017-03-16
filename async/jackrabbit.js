@@ -72,9 +72,9 @@ async function Queue(connection, options = {}) {
   // TODO: leave original flags like noAck even if they're silly, ugly, verbose double-negatives?
   const noAck = options.noAck
   const rethrow = options.rethrow
-  // requeue = 0, never requeue
-  // requeue = 1, requeue original message (default)
-  // requeue > 1, requeue everything
+  // requeue = 0, never requeue (one attempt)
+  // requeue = 1, requeue original message (default) (two attempts)
+  // requeue > 1, requeue everything (infinite attempts)
   const requeue = options.requeue === undefined ? 1 : options.requeue
   const allUpTo = options.prior === undefined ? false : options.prior
   const channel = await connection.createChannel()
