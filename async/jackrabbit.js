@@ -143,13 +143,17 @@ async function Queue(connection, options = {}) {
 }
 
 async function Exchange(connection, options = {}) {
+  // TODO: use es2015 destructuring & default vals to make this less horrible
+  if (options.reply && options.confirm) {
+    throw new Error('Channel cannot be both a confirm and reply channel')
+  }
   const name = options.name || ''
   const type = options.type || 'direct'
-  // TODO: use es2015 destructuring & default vals to make this less horrible
+  const confirm = options.confirm
   const replyTo = options.replyTo === undefined ? 'replyTo' : options.replyTo
   const correlationId = options.correlation === undefined ? 'correlationId' : options.correlation
   const instance = Object.assign(new EventEmitter(), { publish, close, queue })
-  const channel = await connection.createChannel()
+  const channel = confirm ? await connection.createConfirmChannel() : await connection.createChannel()
   const isDefault = (name === '' || DEFAULT_EXCHANGES[type] === name)
   const replies = new EventEmitter()
   console.log('got here')
@@ -180,21 +184,36 @@ async function Exchange(connection, options = {}) {
   return instance
 
   async function publish(content, key, options) {
-    const publishedId = replyQueue && uuid.v4()
-    const replyOptions = { [correlationId]: publishedId, [replyTo]: replyQueue }
     const buffer = Buffer.from(String(content))
     console.log('publishing', buffer.toString(), 'to exchange', name, 'at key', key)
-    if (channel.publish(name, key, buffer, replyOptions)) {
-      setImmediate(() => instance.emit('drain'))
+    if (confirm) {
+      return new Promise((resolve, reject) => {
+        const drained = channel.publish(name, key, buffer, options, (err, ok) => {
+          if (err) return reject(err)
+          resolve()
+        })
+        if (drained) instance.emit('drain')
+      })
     }
-    return new Promise((resolve, reject) => {
-      replies.on('message', checkReply)
-      function checkReply(content, id) {
-        if (id !== publishedId) return
-        replies.removeListener('message', checkReply)
-        resolve(content)
+    else {
+      // TODO: merge options above into replyOptions
+      if (channel.publish(name, key, buffer, replyOptions)) {
+        setImmediate(() => instance.emit('drain'))
       }
-    })
+      if (options.reply) {
+        const publishedId = replyQueue && uuid.v4()
+        const replyOptions = { [correlationId]: publishedId, [replyTo]: replyQueue }
+        return new Promise((resolve, reject) => {
+          replies.on('message', checkReply)
+          function checkReply(content, id) {
+            if (id !== publishedId) return
+            replies.removeListener('message', checkReply)
+            resolve(content)
+          }
+        })
+      }
+      return Promise.resolve()
+    }
   }
 
   async function close() {
