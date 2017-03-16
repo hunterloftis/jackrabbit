@@ -40,8 +40,9 @@ module.exports = (url) => {
   }
 }
 
-async function Queue(connection, options) {
-  const instance = Object.assign(new EventEmitter(), { })
+async function Queue(connection, opts) {
+  const options = Object.assign({ noAck: !opts.ack }, opts)
+  const instance = Object.assign(new EventEmitter(), { close })
   const channel = await connection.createChannel()
   const queue = await channel.assertQueue(options.name, options)
   const name = queue.queue
@@ -51,13 +52,22 @@ async function Queue(connection, options) {
     .on('newListener', consume)
     .on('removeListener', cancel)
     .emit('connect')
+  connection
+    .on('close', () => instance.emit('disconnect'))
+  channel
+    .on('close', () => instance.emit('close', instance))
+    .on('drain', () => instance.emit('drain'))
 
   return instance
+
+  async function close() {
+    await channel.close()
+  }
 
   async function consume(event, listener) {
     if (event !== 'message') return
     if (consumerTag) return
-    consumerTag = await channel.consume(name, onMessage)
+    consumerTag = await channel.consume(name, onMessage, options)
   }
 
   async function cancel(event, listener) {
