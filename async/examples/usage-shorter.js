@@ -102,7 +102,7 @@ second.on('message', console.log)
 
 // RPC client
 const jackrabbit = require('jackrabbit')
-const queue = await jackrabbit(RABBIT_URL).queue({ name: 'rpc', prefect: 1, reply: true })
+const queue = await jackrabbit(RABBIT_URL).queue({ name: 'rpc', prefetch: 1, reply: true })
 const response = await queue.publish({ n: 40 }, { key: 'rpc' })
 console.log(`result: ${response}`)
 queue.close()
