@@ -29,6 +29,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "jest": "^19.0.2"
+    "jest": "^19.0.2",
+    "promisify-event": "^1.0.0"
   }
 }
