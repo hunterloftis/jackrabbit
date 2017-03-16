@@ -6,7 +6,7 @@ main()
 async function main() {
   const queue = await jackrabbit(RABBIT_URL).queue({ name: 'hello', ack: false })
 
-  queue.on('message', async (data) => {
+  queue.consume(async (data) => {
     console.log('received', data)
     await queue.close()
     console.log('closed listening queue')
