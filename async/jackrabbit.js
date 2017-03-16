@@ -72,7 +72,10 @@ async function Queue(connection, options = {}) {
   // TODO: leave original flags like noAck even if they're silly, ugly, verbose double-negatives?
   const noAck = options.noAck
   const rethrow = options.rethrow
-  const requeue = options.requeue === undefined ? true : options.requeue
+  // requeue = 0, never requeue
+  // requeue = 1, requeue original message (default)
+  // requeue > 1, requeue everything
+  const requeue = options.requeue === undefined ? 1 : options.requeue
   const allUpTo = options.prior === undefined ? false : options.prior
   const channel = await connection.createChannel()
   const queue = await channel.assertQueue(options.name, options)
@@ -118,8 +121,10 @@ async function Queue(connection, options = {}) {
       catch (err) {
         console.log('caught error:', err)
         if (!noAck) {
-          console.log('sending nack with requeue:', requeue)
-          channel.nack(msg, allUpTo, requeue)
+          const attempts = msg.fields.redelivered ? 2 : 1
+          const shouldRequeue = requeue >= attempts
+          console.log('sending nack with requeue:', shouldRequeue)
+          channel.nack(msg, allUpTo, shouldRequeue)
         }
         if (rethrow) throw err
       }

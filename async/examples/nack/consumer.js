@@ -4,17 +4,13 @@ const RABBIT_URL = process.env.CLOUDAMQP_URL
 main()
 
 async function main() {
-  try {
-    const queue = await jackrabbit(RABBIT_URL).queue({ name: 'hello' })
+  const queue = await jackrabbit(RABBIT_URL).queue({ name: 'hello', requeue: 1 })
 
-    queue.consume(async (data) => {
-      console.log('processing', data)
-      const success = await randomlyFail(data)
-      if (success) setImmediate(queue.close)
-    })
-  } catch (err) {
-    console.error(err.stack || err)
-  }
+  queue.consume(async (data) => {
+    console.log('processing', data)
+    const success = await randomlyFail(data)
+    if (success) setImmediate(queue.close)
+  })
 }
 
 async function randomlyFail(data) {
