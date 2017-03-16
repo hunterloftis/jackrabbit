@@ -17,7 +17,7 @@
   "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "jest --silent test/*.test.js"
   },
   "engines": {
     "node": ">= 7.6.0"
@@ -29,6 +29,6 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-
+    "jest": "^19.0.2"
   }
 }
