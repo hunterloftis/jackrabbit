@@ -40,8 +40,8 @@ module.exports = (url) => {
   }
 }
 
-async function Queue(connection, opts) {
-  const options = Object.assign({ noAck: !opts.ack }, opts)
+async function Queue(connection, options) {
+  const noAck = options.ack !== undefined ? !options.ack : true
   const instance = Object.assign(new EventEmitter(), { close })
   const channel = await connection.createChannel()
   const queue = await channel.assertQueue(options.name, options)
@@ -67,7 +67,7 @@ async function Queue(connection, opts) {
   async function consume(event, listener) {
     if (event !== 'message') return
     if (consumerTag) return
-    consumerTag = await channel.consume(name, onMessage, options)
+    consumerTag = await channel.consume(name, onMessage, { noAck })
   }
 
   async function cancel(event, listener) {
