@@ -1,15 +1,11 @@
-var jackrabbit = require('../..');
+const jackrabbit = require('../../jackrabbit')
+const RABBIT_URL = process.env.CLOUDAMQP_URL
 
-var rabbit = jackrabbit(process.env.RABBIT_URL);
-var exchange = rabbit.default();
-var rpc = exchange.queue({ name: 'rpc_queue', prefetch: 1, durable: false });
+main()
 
-exchange.publish({ n: 40 }, {
-  key: 'rpc_queue',
-  reply: onReply    // auto sends necessary info so the reply can come to the exclusive reply-to queue for this rabbit instance
-});
-
-function onReply(data) {
-  console.log('result:', data.result);
-  rabbit.close();
+async function main() {
+  const exchange = await jackrabbit(RABBIT_URL).exchange({ prefetch: 1, reply: true })
+  const reply = await exchange.publish(9, 'rpc')
+  console.log(`answer: ${reply}`)
+  exchange.once('drain', exchange.close)
 }

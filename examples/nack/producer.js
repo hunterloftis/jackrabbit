@@ -1,4 +1,4 @@
-const jackrabbit = require('../../jackrabbit')
+const jackrabbit = require('../..')
 const RABBIT_URL = process.env.CLOUDAMQP_URL
 
 main()

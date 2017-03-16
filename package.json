@@ -1,6 +1,6 @@
 {
   "name": "jackrabbit",
-  "version": "4.3.0",
+  "version": "5.0.0-rc1",
   "description": "Easy RabbitMQ for node",
   "readme": "https://github.com/hunterloftis/jackrabbit/blob/master/readme.md",
   "keywords": [
@@ -20,18 +20,15 @@
     "test": "mocha -R spec"
   },
   "engines": {
-    "node": ">= 0.10.x"
+    "node": ">= 7.6.0"
   },
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
   "dependencies": {
     "amqplib": "^0.5.1",
-    "lodash": "^3.10.1",
-    "node-uuid": "1.4.7",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
-    "mocha": "^2.2.5"
+
   }
 }

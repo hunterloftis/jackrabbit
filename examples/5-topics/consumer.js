@@ -1,22 +1,13 @@
-var jackrabbit = require('../..');
+const jackrabbit = require('../../jackrabbit')
+const RABBIT_URL = process.env.CLOUDAMQP_URL
 
-var rabbit = jackrabbit(process.env.RABBIT_URL);
-var exchange = rabbit.topic('topic_animals');
+main()
 
-exchange
-  .queue({ exclusive: true, key: '*.orange.*' })
-  .consume(first);
+async function main() {
+  const exchange = await jackrabbit(RABBIT_URL).topic({ name: 'animals', durable: false })
+  const first = await exchange.queue({ exclusive: true, keys: ['*.orange.*'], ack: false })
+  const second = await exchange.queue({ exclusive: true, keys: ['*.*.rabbit', 'lazy.#'], ack: false })
 
-exchange
-  .queue({ exclusive: true, keys: [ '*.*.rabbit', 'lazy.#' ] })
-  .consume(second);
-
-function first(data, ack) {
-  console.log('First:', data.text);
-  ack();
-}
-
-function second(data, ack) {
-  console.log('Second:', data.text);
-  ack();
+  first.consume(contents => console.log('first:', contents))
+  second.consume(contents => console.log('second:', contents))
 }

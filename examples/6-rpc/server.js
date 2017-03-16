@@ -1,18 +1,20 @@
-var jackrabbit = require('../..');
+const jackrabbit = require('../../jackrabbit')
+const RABBIT_URL = process.env.CLOUDAMQP_URL
 
-var rabbit = jackrabbit(process.env.RABBIT_URL);
-var exchange = rabbit.default();
-var rpc = exchange.queue({ name: 'rpc_queue', prefetch: 1, durable: false });
+main()
 
-rpc.consume(onRequest);
+async function main() {
+  const queue = await jackrabbit(RABBIT_URL).queue({ name: 'rpc', durable: false, ack: false })
 
-function onRequest(data, reply) {
-  console.log('got request for n:', data.n);
-  reply({ result: fib(data.n) });
-}
+  console.log('consuming...')
+  queue.consume(async (n) => {
+    console.log(`request: fib(${n})`)
+    return fib(Number(n))
+  })
 
-function fib(n) {
-  if (n === 0) return 0;
-  if (n === 1) return 1;
-  return fib(n - 1) + fib(n - 2);
+  function fib(n) {
+    if (n === 0) return 0
+    if (n === 1) return 1
+    return fib(n - 1) + fib(n - 2)
+  }
 }

@@ -1,12 +1,11 @@
-var jackrabbit = require('../..');
+const jackrabbit = require('../../jackrabbit')
+const RABBIT_URL = process.env.CLOUDAMQP_URL
 
-var rabbit = jackrabbit(process.env.RABBIT_URL);
-var exchange = rabbit.fanout();
-var logs = exchange.queue({ exclusive: true });
+main()
 
-logs.consume(onLog, { noAck: true });
-// logs.consume(false); // stops consuming
+async function main() {
+  const exchange = await jackrabbit(RABBIT_URL).fanout({ name: 'logs', durable: false })
+  const queue = await exchange.queue({ exclusive: true, ack: false })
 
-function onLog(data) {
-  console.log('Received log:', data);
+  queue.consume(data => console.log('log:', data))
 }
