@@ -4,8 +4,8 @@ const RABBIT_URL = process.env.CLOUDAMQP_URL
 main()
 
 async function main() {
-  const exchange = await jackrabbit(RABBIT_URL).exchange()
+  const exchange = await jackrabbit(RABBIT_URL).fanout({ name: 'logs', durable: false })
 
-  exchange.publish('Hello, world', 'hello')
+  exchange.publish('this is a log')
   exchange.once('drain', exchange.close)
 }

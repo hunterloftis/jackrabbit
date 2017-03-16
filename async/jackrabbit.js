@@ -11,19 +11,38 @@ module.exports = (url) => {
   const actives = new Set()
   let connection
 
-  return { exchange, queue }
+  return {
+    queue,
+    exchange,
+    fanout: builtIn('fanout')
+  }
+
+  function builtIn(type) {
+    return async function (options) {
+      return exchange(options.name || DEFAULT_EXCHANGES[type], type, options)
+    }
+  }
 
   async function exchange(name = '', type = 'direct', options) {
     connection = connection || await amqp.connect(url)
     const newExchange = await Exchange(connection, name, type, options)
-    actives.add(newExchange)
-    newExchange.once('close', removeActive)
-    return newExchange
+    return registerExchange(newExchange)
   }
 
   async function queue(options) {
     connection = connection || await amqp.connect(url)
     const newQueue = await Queue(connection, options)
+    return registerQueue(newQueue)
+  }
+
+  function registerExchange(newExchange) {
+    actives.add(newExchange)
+    newExchange.once('close', removeActive)
+    newExchange.on('queue', registerQueue)
+    return newExchange
+  }
+
+  function registerQueue(newQueue) {
     actives.add(newQueue)
     newQueue.once('close', removeActive)
     return newQueue
@@ -42,10 +61,9 @@ module.exports = (url) => {
 
 async function Queue(connection, options) {
   const noAck = options.ack !== undefined ? !options.ack : true
-  const instance = Object.assign(new EventEmitter(), { close })
   const channel = await connection.createChannel()
   const queue = await channel.assertQueue(options.name, options)
-  const name = queue.queue
+  const instance = Object.assign(new EventEmitter(), { close, name: queue.queue })
   let consumerTag
 
   instance
@@ -67,7 +85,7 @@ async function Queue(connection, options) {
   async function consume(event, listener) {
     if (event !== 'message') return
     if (consumerTag) return
-    consumerTag = await channel.consume(name, onMessage, { noAck })
+    consumerTag = await channel.consume(instance.name, onMessage, { noAck })
   }
 
   async function cancel(event, listener) {
@@ -84,7 +102,7 @@ async function Queue(connection, options) {
 }
 
 async function Exchange(connection, name, type, options) {
-  const instance = Object.assign(new EventEmitter(), { publish, close })
+  const instance = Object.assign(new EventEmitter(), { publish, close, queue })
   const channel = await connection.createChannel()
   const isDefault = (name === '' || DEFAULT_EXCHANGES[type] === name)
 
@@ -95,7 +113,7 @@ async function Exchange(connection, name, type, options) {
   channel.on('drain', () => instance.emit('drain'))
   return instance
 
-  async function publish(key, content, options) {
+  async function publish(content, key, options) {
     console.log('Publishing', content)
     if (channel.publish(name, key, new Buffer(content), options)) {
       setImmediate(() => instance.emit('drain'))
@@ -105,5 +123,12 @@ async function Exchange(connection, name, type, options) {
   async function close() {
     console.log('closing')
     await channel.close()
+  }
+
+  async function queue(options) {
+    const newQueue = await Queue(connection, options)
+    await channel.bindQueue(newQueue.name, name, options.bind)
+    instance.emit('queue', newQueue)
+    return newQueue
   }
 }
