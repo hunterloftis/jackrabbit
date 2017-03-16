@@ -9,7 +9,7 @@ async function main() {
   queue.consume(async (data) => {
     console.log('processing', data)
     const success = await randomlyFail(data)
-    if (success) queue.on('drain', queue.close)
+    if (success) setImmediate(queue.close)
   })
 }
 
