@@ -22,7 +22,7 @@ module.exports = (url) => {
   function builtIn(type) {
     return async function (options) {
       const name = options.name || DEFAULT_EXCHANGES[type]
-      return exchange(Object.assign({ name, type }, options))
+      return await exchange(Object.assign({ name, type }, options))
     }
   }
 
@@ -96,6 +96,7 @@ async function Queue(connection, options = {}) {
   }
 
   async function bind(exchange, pattern) {
+    console.log('binding queue', instance.name, 'to exchange', exchange, 'on pattern', pattern)
     await channel.bindQueue(instance.name, exchange, pattern)
   }
 
@@ -103,12 +104,13 @@ async function Queue(connection, options = {}) {
     if (consumerTag) {
       throw new Error('consume() called more than once')
     }
-    console.log('starting consume channel')
+    console.log('starting consume channel', instance.name)
     consumerTag = await channel.consume(instance.name, onMessage, { noAck })
     console.log('==> started')
 
     async function onMessage(msg) {
       try {
+        console.log('got message')
         const result = await Promise.resolve(consumer(msg.content.toString(), msg))
         reply(msg, result)
         if (!noAck) channel.ack(msg, allUpTo)
@@ -166,7 +168,10 @@ async function Exchange(connection, options = {}) {
       channel.ack(msg)
     })
   }
-  if (!isDefault) await channel.assertExchange(name, type, options)
+  if (!isDefault) {
+    console.log('asserting exchange', name, type, options)
+    await channel.assertExchange(name, type, options)
+  }
 
   instance.emit('connect')
   connection.on('close', () => instance.emit('disconnect'))
@@ -175,10 +180,10 @@ async function Exchange(connection, options = {}) {
   return instance
 
   async function publish(content, key, options) {
-    console.log('Publishing', content)
     const publishedId = replyQueue && uuid.v4()
     const replyOptions = { [correlationId]: publishedId, [replyTo]: replyQueue }
     const buffer = Buffer.from(String(content))
+    console.log('publishing', buffer.toString(), 'to exchange', name, 'at key', key)
     if (channel.publish(name, key, buffer, replyOptions)) {
       setImmediate(() => instance.emit('drain'))
     }
@@ -199,7 +204,7 @@ async function Exchange(connection, options = {}) {
 
   async function queue(options) {
     const newQueue = await Queue(connection, options)
-    const keys = options.keys || []
+    const keys = options.keys || ['']
     const bindings = keys.map(key => newQueue.bind(name, key))
     await Promise.all(bindings)
     instance.emit('queue', newQueue)

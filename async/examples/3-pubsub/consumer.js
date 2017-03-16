@@ -7,7 +7,5 @@ async function main() {
   const exchange = await jackrabbit(RABBIT_URL).fanout({ name: 'logs', durable: false })
   const queue = await exchange.queue({ exclusive: true, ack: false })
 
-  queue.on('message', async (data) => {
-    console.log('log:', data)
-  })
+  queue.consume(data => console.log('log:', data))
 }
