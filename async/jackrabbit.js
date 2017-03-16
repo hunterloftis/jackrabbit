@@ -14,7 +14,8 @@ module.exports = (url) => {
   return {
     queue,
     exchange,
-    fanout: builtIn('fanout')
+    fanout: builtIn('fanout'),
+    topic: builtIn('topic')
   }
 
   function builtIn(type) {
@@ -131,7 +132,9 @@ async function Exchange(connection, name, type, options) {
 
   async function queue(options) {
     const newQueue = await Queue(connection, options)
-    await newQueue.bind(name, options.bind)
+    const keys = options.keys || []
+    const bindings = keys.map(key => newQueue.bind(name, key))
+    await Promise.all(bindings)
     instance.emit('queue', newQueue)
     return newQueue
   }
