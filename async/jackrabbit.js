@@ -21,7 +21,8 @@ module.exports = (url) => {
 
   function builtIn(type) {
     return async function (options) {
-      return exchange(options.name || DEFAULT_EXCHANGES[type], type, options)
+      const name = options.name || DEFAULT_EXCHANGES[type]
+      return exchange(Object.assign({ name, type }, options))
     }
   }
 
@@ -68,6 +69,7 @@ module.exports = (url) => {
 async function Queue(connection, options = {}) {
   const replyTo = options.replyTo === undefined ? 'replyTo' : options.replyTo
   const correlationId = options.correlationId === undefined ? 'correlationId' : options.correlationId
+  // TODO: leave original flags like noAck even if they're silly, ugly, verbose double-negatives?
   const noAck = options.ack === undefined ? true : !options.ack
   const rethrow = options.rethrow
   const requeue = options.requeue === undefined ? true : options.requeue
@@ -85,7 +87,7 @@ async function Queue(connection, options = {}) {
   instance.emit('connect')
   connection.on('close', () => instance.emit('disconnect'))
   channel.on('close', () => instance.emit('close', instance))
-         .on('drain', () => instance.emit('drain'))
+  channel.on('drain', () => instance.emit('drain'))
 
   return instance
 
@@ -108,7 +110,6 @@ async function Queue(connection, options = {}) {
     async function onMessage(msg) {
       try {
         const result = await Promise.resolve(consumer(msg.content.toString(), msg))
-        console.log('result:', result)
         reply(msg, result)
         if (!noAck) channel.ack(msg, allUpTo)
       }
@@ -135,9 +136,6 @@ async function Queue(connection, options = {}) {
       console.log('sending', buffer.toString(), 'to', replyQueue, 'with correlation', correlation)
       const drained = channel.sendToQueue(replyQueue, buffer, correlation)
       if (drained) setImmediate(() => instance.emit('drain'))
-    }
-    else {
-      throw new Error('Value returned from consumer but missing replyTo or correlationId')
     }
   }
 }

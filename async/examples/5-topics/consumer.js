@@ -8,6 +8,6 @@ async function main() {
   const first = await exchange.queue({ exclusive: true, keys: ['*.orange.*'], ack: false })
   const second = await exchange.queue({ exclusive: true, keys: ['*.*.rabbit', 'lazy.#'], ack: false })
 
-  first.on('message', contents => console.log('first:', contents))
-  second.on('message', contents => console.log('second:', contents))
+  first.consume(contents => console.log('first:', contents))
+  second.consume(contents => console.log('second:', contents))
 }
