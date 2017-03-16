@@ -70,7 +70,7 @@ async function Queue(connection, options = {}) {
   const replyTo = options.replyTo === undefined ? 'replyTo' : options.replyTo
   const correlationId = options.correlationId === undefined ? 'correlationId' : options.correlationId
   // TODO: leave original flags like noAck even if they're silly, ugly, verbose double-negatives?
-  const noAck = options.ack === undefined ? true : !options.ack
+  const noAck = options.noAck
   const rethrow = options.rethrow
   const requeue = options.requeue === undefined ? true : options.requeue
   const allUpTo = options.prior === undefined ? false : options.prior
@@ -116,7 +116,11 @@ async function Queue(connection, options = {}) {
         if (!noAck) channel.ack(msg, allUpTo)
       }
       catch (err) {
-        if (!noAck) channel.nack(msg, allUpTo, requeue)
+        console.log('caught error:', err)
+        if (!noAck) {
+          console.log('sending nack with requeue:', requeue)
+          channel.nack(msg, allUpTo, requeue)
+        }
         if (rethrow) throw err
       }
     }
@@ -183,37 +187,38 @@ async function Exchange(connection, options = {}) {
   channel.on('drain', () => instance.emit('drain'))
   return instance
 
-  async function publish(content, key, options) {
+  async function publish(content, key, publishOptions = {}) {
     const buffer = Buffer.from(String(content))
     console.log('publishing', buffer.toString(), 'to exchange', name, 'at key', key)
     if (confirm) {
       return new Promise((resolve, reject) => {
-        const drained = channel.publish(name, key, buffer, options, (err, ok) => {
+        const drained = channel.publish(name, key, buffer, publishOptions, (err, ok) => {
           if (err) return reject(err)
           resolve()
         })
         if (drained) instance.emit('drain')
       })
     }
-    else {
+    else if (options.reply) {
       // TODO: merge options above into replyOptions
+      const publishedId = replyQueue && uuid.v4()
+      const replyOptions = { [correlationId]: publishedId, [replyTo]: replyQueue }
       if (channel.publish(name, key, buffer, replyOptions)) {
         setImmediate(() => instance.emit('drain'))
       }
-      if (options.reply) {
-        const publishedId = replyQueue && uuid.v4()
-        const replyOptions = { [correlationId]: publishedId, [replyTo]: replyQueue }
-        return new Promise((resolve, reject) => {
-          replies.on('message', checkReply)
-          function checkReply(content, id) {
-            if (id !== publishedId) return
-            replies.removeListener('message', checkReply)
-            resolve(content)
-          }
-        })
-      }
-      return Promise.resolve()
+      return new Promise((resolve, reject) => {
+        replies.on('message', checkReply)
+        function checkReply(content, id) {
+          if (id !== publishedId) return
+          replies.removeListener('message', checkReply)
+          resolve(content)
+        }
+      })
     }
+    if (channel.publish(name, key, buffer, publishOptions)) {
+      setImmediate(() => instance.emit('drain'))
+    }
+    return Promise.resolve()
   }
 
   async function close() {
