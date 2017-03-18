@@ -52,9 +52,6 @@ describe('.exchange', () => {
       expect(exchange).toHaveProperty('config')
       await exchange.close()
     })
-
-  })
-  describe('publish', async () => {
     it("uses the default exchange ('') by default", async () => {
       const exchange = await jackrabbit(RABBIT_URL).exchange()
       expect(exchange.config.name).toBe('')
@@ -89,6 +86,9 @@ describe('.exchange', () => {
         expect(err.message).toMatch(/No publish method for mode/)
       }
     })
+  })
+  describe('publish', async () => {
+
 
   })
 })
