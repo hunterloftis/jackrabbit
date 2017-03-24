@@ -17,7 +17,8 @@
   "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
-    "test": "jest --silent test/*.test.js"
+    "test": "mocha --bail test/*.test.js",
+    "connect": "node test/connect.js"
   },
   "engines": {
     "node": ">= 7.6.0"
@@ -29,7 +30,8 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "jest": "^19.0.2",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
     "promisify-event": "^1.0.0"
   }
 }

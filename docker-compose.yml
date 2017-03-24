@@ -1,11 +1,17 @@
+# https://github.com/docker-library/rabbitmq/issues/99
+
 jackrabbit:
-  image: node
+  image: node:7.6.0
   working_dir: /code
   volumes:
     - .:/code
   links:
     - rabbit
   environment:
-    RABBIT_URL: 'amqp://rabbit'
+    RABBIT_URL: 'amqp://user:pass@rabbit/vhost'
 rabbit:
   image: rabbitmq
+  environment:
+    RABBITMQ_DEFAULT_VHOST: 'vhost'
+    RABBITMQ_DEFAULT_USER: 'user'
+    RABBITMQ_DEFAULT_PASS: 'pass'
