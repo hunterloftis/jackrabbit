@@ -3,8 +3,6 @@ const assert = require('chai').assert
 const pevent = require('promisify-event')
 const RABBIT_URL = process.env.RABBIT_URL
 
-// console.log = () => {}
-
 describe('broker', () => {
   const url = 'amqp://localhost/foo'
   const broker = jackrabbit(url)
@@ -126,6 +124,60 @@ describe('.queue', () => {
       await queue.close()
       await pevent(queue, 'disconnect')
       assert.isUndefined(broker.connection)
+    })
+  })
+})
+
+describe('.fanout', () => {
+  describe('constructor', () => {
+    describe('without name', () => {
+      const broker = jackrabbit(RABBIT_URL)
+      let exchange
+      it('uses the default amq.fanout exchange', async () => {
+        exchange = await broker.fanout()
+        assert.property(exchange, 'publish')
+        assert.equal(exchange.config.name, 'amq.fanout')
+        assert.equal(exchange.config.type, 'fanout')
+        await exchange.close()
+      })
+    })
+    describe('with name', () => {
+      const broker = jackrabbit(RABBIT_URL)
+      let exchange
+      it('uses the default amq.fanout exchange', async () => {
+        exchange = await broker.fanout({ name: 'my-fanout' })
+        assert.property(exchange, 'publish')
+        assert.equal(exchange.config.name, 'my-fanout')
+        assert.equal(exchange.config.type, 'fanout')
+        await exchange.close()
+      })
+    })
+  })
+})
+
+describe('.topic', () => {
+  describe('constructor', () => {
+    describe('without name', () => {
+      const broker = jackrabbit(RABBIT_URL)
+      let exchange
+      it('uses the default amq.topic exchange', async () => {
+        exchange = await broker.topic()
+        assert.property(exchange, 'publish')
+        assert.equal(exchange.config.name, 'amq.topic')
+        assert.equal(exchange.config.type, 'topic')
+        await exchange.close()
+      })
+    })
+    describe('with name', () => {
+      const broker = jackrabbit(RABBIT_URL)
+      let exchange
+      it('uses the default amq.topic exchange', async () => {
+        exchange = await broker.topic({ name: 'my-topic' })
+        assert.property(exchange, 'publish')
+        assert.equal(exchange.config.name, 'my-topic')
+        assert.equal(exchange.config.type, 'topic')
+        await exchange.close()
+      })
     })
   })
 })
