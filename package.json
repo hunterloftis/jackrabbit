@@ -18,6 +18,7 @@
   "main": "lib/jackrabbit.js",
   "scripts": {
     "test": "mocha --bail test/*.test.js",
+    "test:docker": "docker-compose run jackrabbit yarn test",
     "connect": "node test/connect.js"
   },
   "engines": {

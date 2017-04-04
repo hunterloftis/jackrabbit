@@ -38,11 +38,11 @@ describe('.exchange', () => {
     })
     it('throws an error if a connection cannot be established', async() => {
       try {
-        await jackrabbit('amqp://foo').exchange()
+        await jackrabbit('amqp://localhost:1234').exchange()
         throw new Error('should fail')
       }
       catch (err) {
-        assert.match(err.message, /ENOTFOUND/)
+        assert.match(err.message, /ECONNREFUSED/)
       }
     })
     it('exposes publish, close, queue, and config', async () => {
@@ -98,14 +98,34 @@ describe('.exchange', () => {
     })
   })
   describe('.queue', async () => {
-    const exchange = await jackrabbit(RABBIT_URL).exchange()
+    const broker = jackrabbit(RABBIT_URL)
+    const exchange = await broker.exchange()
     const queue = await exchange.queue()
     it('returns a Promise which resolves to a Queue', async () => {
       assert.property(queue, 'consume')
     })
     it('disconnects if the exchange closes', async () => {
+      assert.isDefined(broker.connection)
       await exchange.close()
       await pevent(queue, 'close')
+      assert.isUndefined(broker.connection)
+    })
+  })
+})
+
+describe('.queue', () => {
+  describe('constructor', () => {
+    const broker = jackrabbit(RABBIT_URL)
+    let queue
+    it('returns a Promise which resolves to a Queue', async () => {
+      queue = await broker.queue({ name: 'hello' })
+      assert.property(queue, 'consume')
+    })
+    it('disconnects if the queue closes', async () => {
+      assert.isDefined(broker.connection)
+      await queue.close()
+      await pevent(queue, 'disconnect')
+      assert.isUndefined(broker.connection)
     })
   })
 })
