@@ -31,8 +31,12 @@ RabbitMQ is an implementation of the AMQP 0.9.1 protocol,
 so it's a good idea to get familiar with
 [AMQP concepts](http://www.rabbitmq.com/tutorials/amqp-concepts.html).
 
-If you just want to get started, here's the gist:
-- RabbitMQ contains **Exchanges** and **Queues,** both of which you can create
+If you just want to dive right in, here's the gist:
+
+![RabbitMQ Concepts](http://www.rabbitmq.com/img/tutorials/intro/hello-world-example-routing.png)
+
+- RabbitMQ manages **Exchanges** and **Queues,**
+both of which you can create with various options.
 - **Publishers** publish messages to **Exchanges**.
 You can write **Publishers** in node with Jackrabbit.
 - **Consumers** consume messages from **Queues**
