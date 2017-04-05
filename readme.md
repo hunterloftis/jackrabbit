@@ -27,7 +27,7 @@ queue.consume(data => console.log(`received: ${data}`))
 
 ## Documentation
 
-### Concepts
+### AMQP Concepts
 
 RabbitMQ is an implementation of the AMQP 0.9.1 protocol,
 so it's a good idea to get familiar with
@@ -38,16 +38,43 @@ However, if you just want to dive right in, here's the gist:
 
 RabbitMQ manages **Exchanges** and **Queues,**
 both of which you can create with various options.
-Your node apps *publish* messages to Exchanges
-and *consume* messages from Queues.
+Your node apps *publish* messages *to* Exchanges
+and *consume* messages *from* Queues.
 
-RabbitMQ moves messages from **Exchanges** to **Queues** based on routing rules.
+RabbitMQ routes messages from **Exchanges** to **Queues** based on routing rules.
 You control routing rules by setting Exchange types (direct, fanout, topic),
 specifying keys for messages, and binding Queues to specific keys.
 
+### Architecture
+
+When designing a microservice-based architecture based on RabbitMQ,
+it can help to think visually about how data should pass through your services.
+
+![patterns](https://cloud.githubusercontent.com/assets/364501/24723674/6c97a902-1a16-11e7-987f-5165d58f9bc4.png)
+
+Other architectural considerations include:
+
+#### queue.durable?
+Should a queue be persisted to disk? This only keeps the queue itself, not its messages.
+
+#### message.persistent?
+Should a message be persisted to disk? This depends on the message living in a durable queue.
+
+#### queue.noAck?
+By default, consumers are required to acknowledge messages that they've handled.
+If the consumer disconnects before acking, the message will be redelivered to another consumer.
+Use noAck to consume messages without requiring acknowledgement.
+
+#### queue.exclusive?
+Should only one consumer be allowed to attach to this queue at a time?
+
+#### message.expiration?
+Should a message expire once it's been waiting in a queue longer than X milliseconds?
+
 ## Examples
 
-Each of the official RabbitMQ tutorials has a corresponding test/example:
+Each of the [six official RabbitMQ tutorials](https://www.rabbitmq.com/getstarted.html)
+has a corresponding test/example:
 
 1. [Hello, world](test/hello.test.js)
 2. [Work queues](test/work.test.js)
@@ -58,7 +85,7 @@ Each of the official RabbitMQ tutorials has a corresponding test/example:
 
 ## Tests
 
-The tests are set up with Docker + Docker-Compose,
+The tests are set up with Docker-Compose,
 so you don't need to install rabbitmq (or even node) to run them:
 
 ```

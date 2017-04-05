@@ -206,3 +206,8 @@ async function randomlyFail(data) {
 const broker = await jackrabbit(RABBIT_URL)
 const failed = await broker.exchange({ name: 'failed', durable: true })
 const queue = await jackrabbit(RABBIT_URL).queue({ deadLetterExchange: 'failed' })
+
+
+// support for "mandatory" messages?
+
+// how to reconcile default queue names with auto-generated queue names? how to get an auto-generated name?
