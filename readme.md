@@ -25,6 +25,21 @@ const queue = await jackrabbit(RABBIT_URL).queue({ name: 'my-queue' })
 queue.consume(data => console.log(`received: ${data}`))
 ```
 
+## Documentation
+
+RabbitMQ is an implementation of the AMQP 0.9.1 protocol,
+so it's a good idea to get familiar with
+[AMQP concepts](http://www.rabbitmq.com/tutorials/amqp-concepts.html).
+
+If you just want to get started, here's the gist:
+- RabbitMQ contains **Exchanges** and **Queues,** both of which you can create
+- **Publishers** publish messages to **Exchanges**.
+You can write **Publishers** in node with Jackrabbit.
+- **Consumers** consume messages from **Queues**
+- Messages move from **Exchanges** to **Queues** based on routing rules.
+You control routing rules by setting **Exchange** types (direct, fanout, topic),
+setting routing keys on messages, and binding **Queues** to specific keys.
+
 ## Examples
 
 Each of the official RabbitMQ tutorials has a corresponding test/example:
