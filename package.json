@@ -17,9 +17,10 @@
   "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
+    "clean": "rm -rf node_modules",
     "test": "mocha --bail test/*.test.js",
     "test:docker": "docker-compose run jackrabbit yarn test",
-    "connect": "node test/connect.js"
+    "test:suite": "yarn clean && yarn install && yarn test"
   },
   "engines": {
     "node": ">= 7.6.0"

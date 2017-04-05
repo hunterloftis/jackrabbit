@@ -1,6 +1,15 @@
 # https://github.com/docker-library/rabbitmq/issues/99
 
 jackrabbit:
+  image: node:latest
+  working_dir: /code
+  volumes:
+    - .:/code
+  links:
+    - rabbit
+  environment:
+    RABBIT_URL: 'amqp://user:pass@rabbit/vhost'
+jackrabbit-oldest:
   image: node:7.6.0
   working_dir: /code
   volumes:

@@ -2,5 +2,5 @@ sudo: required
 services:
   - docker
 script:
-  - yarn install
-  - yarn run test:docker
+  - docker-compose run jackrabbit yarn test:suite
+  - docker-compose run jackrabbit-oldest yarn test:suite
