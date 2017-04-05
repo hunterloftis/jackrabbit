@@ -32,7 +32,7 @@ so it's a good idea to get familiar with
 [AMQP concepts](http://www.rabbitmq.com/tutorials/amqp-concepts.html).
 However, if you just want to dive right in, here's the gist:
 
-![RabbitMQ Concepts](http://www.rabbitmq.com/img/tutorials/intro/hello-world-example-routing.png)
+![RabbitMQ Concepts](https://cloud.githubusercontent.com/assets/364501/24713529/f614f4d2-19f3-11e7-9551-c05017e07261.png)
 
 ### Exchanges and Queues
 RabbitMQ manages **Exchanges** and **Queues,**
