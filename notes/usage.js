@@ -5,7 +5,7 @@
 // X - reply: false (https://github.com/hunterloftis/jackrabbit/pull/57) (false by default, set reply: true to create a reply channel)
 // X - nack with options: (https://github.com/hunterloftis/jackrabbit/pull/47)
 // X - ack: non-promise return value, Promise.resolve(), nack: Promise.reject()
-// X - maybe .publish() should return a Promise that resolve when the publishing happens? (https://github.com/hunterloftis/jackrabbit/issues/52)
+// X - maybe .publish() should return a Promise that resolves when the publishing happens? (https://github.com/hunterloftis/jackrabbit/issues/52)
 // X - get size of queue? (https://github.com/hunterloftis/jackrabbit/issues/41)
 
 // simple producer
