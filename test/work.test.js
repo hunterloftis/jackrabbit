@@ -1,3 +1,6 @@
+// Corresponds to Tutorial 2
+// https://www.rabbitmq.com/tutorials/tutorial-two-javascript.html
+
 const jackrabbit = require('..')
 const assert = require('chai').assert
 const pevent = require('promisify-event')

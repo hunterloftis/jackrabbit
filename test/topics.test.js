@@ -10,17 +10,15 @@ describe('integration: topics', () => {
   let received2 = []
 
   it(`consumes from two queues bound to the ${NAME} topic exchange`, async () => {
-    const exchange = await jackrabbit(RABBIT_URL).topic({ name: 'animals', durable: false })
+    const exchange = await jackrabbit(RABBIT_URL).topic({ name: NAME, durable: false })
     first = await exchange.queue({ exclusive: true, keys: ['*.orange.*'], ack: false })
     second = await exchange.queue({ exclusive: true, keys: ['*.*.rabbit', 'lazy.#'], ack: false })
-
     first.consume(contents => received1.push(contents))
     second.consume(contents => received2.push(contents))
   })
 
   it(`publishes to various keys on ${NAME}`, async () => {
-    const exchange = await jackrabbit(RABBIT_URL).topic({ name: 'animals', durable: false })
-
+    const exchange = await jackrabbit(RABBIT_URL).topic({ name: NAME, durable: false })
     exchange.publish('both a', 'quick.orange.rabbit')
     exchange.publish('both b', 'lazy.orange.elephant')
     exchange.publish('first a', 'quick.orange.fox')
@@ -33,13 +31,9 @@ describe('integration: topics', () => {
   })
 
   it(`receives routed topical messages`, async function () {
-    this.retries(Infinity)
-
+    this.retries(1000)
     assert.deepEqual(received1, ['both a', 'both b', 'first a'])
     assert.deepEqual(received2, ['both a', 'both b', 'second a', 'second b', 'second c'])
-  })
-
-  it('closes the queues', async () => {
     await Promise.all([ first.close(), second.close() ])
   })
 })
