@@ -27,6 +27,8 @@ queue.consume(data => console.log(`received: ${data}`))
 
 ## Documentation
 
+### Concepts
+
 RabbitMQ is an implementation of the AMQP 0.9.1 protocol,
 so it's a good idea to get familiar with
 [AMQP concepts](http://www.rabbitmq.com/tutorials/amqp-concepts.html).
@@ -34,16 +36,14 @@ However, if you just want to dive right in, here's the gist:
 
 ![RabbitMQ Concepts](https://cloud.githubusercontent.com/assets/364501/24713529/f614f4d2-19f3-11e7-9551-c05017e07261.png)
 
-### Exchanges and Queues
 RabbitMQ manages **Exchanges** and **Queues,**
 both of which you can create with various options.
-Your node apps *publish* messages to **Exchanges**
-and *consume* messages from **Queues** (via Jackrabbit).
+Your node apps *publish* messages to Exchanges
+and *consume* messages from Queues.
 
-### Routing
 RabbitMQ moves messages from **Exchanges** to **Queues** based on routing rules.
-You control routing rules by setting **Exchange** types (direct, fanout, topic),
-specifying keys for messages, and binding **Queues** to specific keys.
+You control routing rules by setting Exchange types (direct, fanout, topic),
+specifying keys for messages, and binding Queues to specific keys.
 
 ## Examples
 
