@@ -34,15 +34,16 @@ However, if you just want to dive right in, here's the gist:
 
 ![RabbitMQ Concepts](http://www.rabbitmq.com/img/tutorials/intro/hello-world-example-routing.png)
 
-- RabbitMQ manages **Exchanges** and **Queues,**
+### Exchanges and Queues
+RabbitMQ manages **Exchanges** and **Queues,**
 both of which you can create with various options.
-- **Publishers** publish messages to **Exchanges**.
-You can write **Publishers** in node with Jackrabbit.
-- **Consumers** consume messages from **Queues**
-You can also write **Consumers** in node with Jackrabbit.
-- Messages move from **Exchanges** to **Queues** based on routing rules.
+Your node apps *publish* messages to **Exchanges**
+and *consume* messages from **Queues** (via Jackrabbit).
+
+### Routing
+RabbitMQ moves messages from **Exchanges** to **Queues** based on routing rules.
 You control routing rules by setting **Exchange** types (direct, fanout, topic),
-setting routing keys on messages, and binding **Queues** to specific keys.
+specifying keys for messages, and binding **Queues** to specific keys.
 
 ## Examples
 
