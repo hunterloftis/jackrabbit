@@ -49,10 +49,8 @@ Your node apps *publish* messages *to* Exchanges
 and *consume* messages *from* Queues.
 
 RabbitMQ routes messages from **Exchanges** to **Queues** based on routing rules.
-You control routing rules by setting Exchange types (direct, fanout, topic),
-specifying keys for messages, and binding Queues to specific keys.
 
-### Architecture
+### Routing
 
 When designing a microservice-based architecture based on RabbitMQ,
 it can help to think visually about how data should pass through your services.
