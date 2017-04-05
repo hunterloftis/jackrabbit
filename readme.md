@@ -49,27 +49,9 @@ specifying keys for messages, and binding Queues to specific keys.
 
 When designing a microservice-based architecture based on RabbitMQ,
 it can help to think visually about how data should pass through your services.
+How should you configure and connect your Exchanges and Queues?
 
 ![patterns](https://cloud.githubusercontent.com/assets/364501/24723674/6c97a902-1a16-11e7-987f-5165d58f9bc4.png)
-
-Other architectural considerations include:
-
-#### queue.durable?
-Should a queue be persisted to disk? This only keeps the queue itself, not its messages.
-
-#### message.persistent?
-Should a message be persisted to disk? This depends on the message living in a durable queue.
-
-#### queue.noAck?
-By default, consumers are required to acknowledge messages that they've handled.
-If the consumer disconnects before acking, the message will be redelivered to another consumer.
-Use noAck to consume messages without requiring acknowledgement.
-
-#### queue.exclusive?
-Should only one consumer be allowed to attach to this queue at a time?
-
-#### message.expiration?
-Should a message expire once it's been waiting in a queue longer than X milliseconds?
 
 ## Examples
 
