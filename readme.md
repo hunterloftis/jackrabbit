@@ -1,10 +1,11 @@
 # Jackrabbit
 
 RabbitMQ in Node.js without hating life.
-Jackrabbit is designed for *simplicity* with an easy, async-await based API.
+
+Designed for simplicity with an async-await based API.
 
 ```
-yarn add jackrabbit
+$ yarn add jackrabbit
 ```
 
 ## Hello, world
@@ -24,17 +25,16 @@ const queue = await jackrabbit(RABBIT_URL).queue({ name: 'my-queue' })
 queue.consume(data => console.log(`received: ${data}`))
 ```
 
-## Use
+## Examples
 
 Each of the official RabbitMQ tutorials has a corresponding test/example:
 
 1. [Hello, world](test/hello.test.js)
-2. Work queues
-3. Pubsub
-4. Routing
-5. Topics
-6. RPC
-
+2. [Work queues](test/work.test.js)
+3. [Pubsub](test/pubsub.test.js)
+4. [Routing](test/routing.test.js)
+5. [Topics](test/topics.test.js)
+6. [RPC](test/rpc.test.js)
 
 ## Tests
 
