@@ -25,6 +25,13 @@ const queue = await jackrabbit(RABBIT_URL).queue({ name: 'my-queue' })
 queue.consume(data => console.log(`received: ${data}`))
 ```
 
+## Why?
+
+Jackrabbit is essentially a bookkeeping library.
+RabbitMQ requires all sorts of bookkeeping - names and properties
+of queues, exchanges, channels, connections, replyTos, correlation IDs -
+and Jackrabbit handles the bookkeeping so you can focus on application logic.
+
 ## Documentation
 
 ### AMQP Concepts
