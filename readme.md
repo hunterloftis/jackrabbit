@@ -48,9 +48,9 @@ both of which you can create with various options.
 Your node apps *publish* messages *to* Exchanges
 and *consume* messages *from* Queues.
 
-RabbitMQ routes messages from **Exchanges** to **Queues** based on routing rules.
+RabbitMQ routes messages from **Exchanges** to **Queues** based on routing rules:
 
-### Routing
+### Routing rules
 
 When designing a microservice-based architecture based on RabbitMQ,
 it can help to think visually about how data should pass through your services.
