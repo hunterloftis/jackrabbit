@@ -39,6 +39,7 @@ both of which you can create with various options.
 - **Publishers** publish messages to **Exchanges**.
 You can write **Publishers** in node with Jackrabbit.
 - **Consumers** consume messages from **Queues**
+You can also write **Consumers** in node with Jackrabbit.
 - Messages move from **Exchanges** to **Queues** based on routing rules.
 You control routing rules by setting **Exchange** types (direct, fanout, topic),
 setting routing keys on messages, and binding **Queues** to specific keys.
