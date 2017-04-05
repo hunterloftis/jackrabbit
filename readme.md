@@ -30,8 +30,7 @@ queue.consume(data => console.log(`received: ${data}`))
 RabbitMQ is an implementation of the AMQP 0.9.1 protocol,
 so it's a good idea to get familiar with
 [AMQP concepts](http://www.rabbitmq.com/tutorials/amqp-concepts.html).
-
-If you just want to dive right in, here's the gist:
+However, if you just want to dive right in, here's the gist:
 
 ![RabbitMQ Concepts](http://www.rabbitmq.com/img/tutorials/intro/hello-world-example-routing.png)
 
