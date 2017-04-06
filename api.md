@@ -4,6 +4,9 @@
 
 -   [jackrabbit](#jackrabbit)
 -   [jackrabbit.exchange](#jackrabbitexchange)
+-   [jackrabbit.fanout](#jackrabbitfanout)
+-   [jackrabbit.topic](#jackrabbittopic)
+-   [jackrabbit.queue](#jackrabbitqueue)
 
 ## jackrabbit
 
@@ -21,8 +24,41 @@ Asserts an exchange
 
 **Parameters**
 
--   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?=  =** 
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?= ch** 
     -   `options.type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the exchange type
     -   `options.name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the name of the exchange
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;Exchange>** a promise for an exchange
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;exchange>** 
+
+## jackrabbit.fanout
+
+Asserts a fanout exchange
+
+**Parameters**
+
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?=   ** 
+    -   `options.name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the name of the exchange
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;exchange>** 
+
+## jackrabbit.topic
+
+Asserts a topic exchange
+
+**Parameters**
+
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?= nn** 
+    -   `options.name` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the name of the exchange
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;exchange>** 
+
+## jackrabbit.queue
+
+Asserts a queue on the default exchange
+
+**Parameters**
+
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?= 
+     ** 
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;queue>** 
