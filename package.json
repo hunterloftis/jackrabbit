@@ -21,7 +21,7 @@
     "test": "mocha --bail test/*.test.js",
     "test:docker": "docker-compose run jackrabbit yarn test",
     "test:suite": "yarn clean && yarn install && yarn test",
-    "doc": "documentation build lib/jackrabbit.js lib/exchange.js lib/queue.js -f md -o api.md"
+    "doc": "documentation build lib/jackrabbit.js -f md -o api.md"
   },
   "engines": {
     "node": ">= 7.6.0"

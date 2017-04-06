@@ -3,10 +3,16 @@
 ### Table of Contents
 
 -   [jackrabbit](#jackrabbit)
+-   [jackrabbit.connection](#jackrabbitconnection)
+-   [jackrabbit.connection](#jackrabbitconnection-1)
 -   [jackrabbit.exchange](#jackrabbitexchange)
 -   [jackrabbit.fanout](#jackrabbitfanout)
 -   [jackrabbit.topic](#jackrabbittopic)
 -   [jackrabbit.queue](#jackrabbitqueue)
+-   [exchange.publish](#exchangepublish)
+-   [exchange.config](#exchangeconfig)
+-   [exchange.close](#exchangeclose)
+-   [exchange.queue](#exchangequeue)
 
 ## jackrabbit
 
@@ -17,6 +23,14 @@ jackrabbit constructor
 -   `url` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** an amqp urlstring
 
 Returns **[jackrabbit](#jackrabbit)** a broker instance
+
+## jackrabbit.connection
+
+get the current connection
+
+## jackrabbit.connection
+
+get the current connection
 
 ## jackrabbit.exchange
 
@@ -60,5 +74,37 @@ Asserts a queue on the default exchange
 
 -   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?= 
      ** 
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;queue>** 
+
+## exchange.publish
+
+Publishes a message to an exchange
+
+**Parameters**
+
+-   `message` **([string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) \| [object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) \| [number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number))** 
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## exchange.config
+
+get the exchange configuration
+
+## exchange.close
+
+Closes the exchange
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## exchange.queue
+
+Asserts a queue on this exchange
+
+**Parameters**
+
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;queue>** 
