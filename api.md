@@ -13,6 +13,11 @@
 -   [exchange.config](#exchangeconfig)
 -   [exchange.close](#exchangeclose)
 -   [exchange.queue](#exchangequeue)
+-   [queue.name](#queuename)
+-   [queue.close](#queueclose)
+-   [queue.bind](#queuebind)
+-   [queue.consume](#queueconsume)
+-   [queue.cancel](#queuecancel)
 
 ## jackrabbit
 
@@ -108,3 +113,41 @@ Asserts a queue on this exchange
 -   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;queue>** 
+
+## queue.name
+
+get the name of the queue
+
+## queue.close
+
+Closes the queueu
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## queue.bind
+
+Bind the queue to an exchange
+
+**Parameters**
+
+-   `exchange` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `key` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `pattern`  
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## queue.consume
+
+Start consuming a queue
+
+**Parameters**
+
+-   `consumer` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** 
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+
+## queue.cancel
+
+Stop consuming a queue
+
+Returns **[promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 

@@ -211,3 +211,5 @@ const queue = await jackrabbit(RABBIT_URL).queue({ deadLetterExchange: 'failed' 
 // support for "mandatory" messages?
 
 // how to reconcile default queue names with auto-generated queue names? how to get an auto-generated name?
+
+// tests for queue.cancel

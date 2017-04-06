@@ -25,7 +25,7 @@ const queue = await jackrabbit(RABBIT_URL).queue({ name: 'my-queue' })
 queue.consume(data => console.log(`received: ${data}`))
 ```
 
-## Why?
+## Motivation
 
 Jackrabbit is essentially a bookkeeping library.
 RabbitMQ requires all sorts of bookkeeping - names and properties
@@ -33,6 +33,21 @@ of queues, exchanges, channels, connections, replyTos, correlation IDs -
 and Jackrabbit handles the bookkeeping so you can focus on application logic.
 
 ## Documentation
+
+For detailed usage instructions, see Jackrabbit's
+[API documentation](api.md).
+
+### Examples
+
+Each of the [six official RabbitMQ tutorials](https://www.rabbitmq.com/getstarted.html)
+has a corresponding test/example:
+
+1. [Hello, world](test/hello.test.js)
+2. [Work queues](test/work.test.js)
+3. [Pubsub](test/pubsub.test.js)
+4. [Routing](test/routing.test.js)
+5. [Topics](test/topics.test.js)
+6. [RPC](test/rpc.test.js)
 
 ### AMQP Concepts
 
@@ -57,18 +72,6 @@ it can help to think visually about how data should pass through your services.
 How should you configure and connect your Exchanges and Queues?
 
 ![patterns](https://cloud.githubusercontent.com/assets/364501/24723674/6c97a902-1a16-11e7-987f-5165d58f9bc4.png)
-
-## Examples
-
-Each of the [six official RabbitMQ tutorials](https://www.rabbitmq.com/getstarted.html)
-has a corresponding test/example:
-
-1. [Hello, world](test/hello.test.js)
-2. [Work queues](test/work.test.js)
-3. [Pubsub](test/pubsub.test.js)
-4. [Routing](test/routing.test.js)
-5. [Topics](test/topics.test.js)
-6. [RPC](test/rpc.test.js)
 
 ## Tests
 
