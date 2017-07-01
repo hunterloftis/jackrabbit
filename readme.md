@@ -47,6 +47,10 @@ rabbit
     ack();
     // or alternatively NACK on failure
     nack();
+    // optionally nack and do not requeue
+    nack({
+      requeue: false
+    });
   })
 ```
 
