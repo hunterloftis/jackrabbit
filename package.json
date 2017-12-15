@@ -33,6 +33,9 @@
   },
   "devDependencies": {
     "chai": "4.x",
+    "eslint": "6.x.x",
+    "eslint-config-hapi": "12.x.x",
+    "eslint-plugin-hapi": "4.x.x",
     "mocha": "3.x.x"
   }
 }
