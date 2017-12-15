@@ -92,23 +92,23 @@ describe('exchange', function() {
         }.bind(this));
       });
 
-    	it('emits a "bound" event when all routing keys have been bound to the queue', function (done) {
+      it('emits a "bound" event when all routing keys have been bound to the queue', function (done) {
         var keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
         var finalKey = keys[keys.length - 1];
         var queue = this.exchange.queue({ keys: keys });
         var message = uuid();
 
-    		queue.consume(function (data, ack, nack, msg) {
-    			assert.equal(message, data);
-    			assert.equal(msg.fields.routingKey, finalKey);
-    			ack();
+        queue.consume(function (data, ack, nack, msg) {
+          assert.equal(message, data);
+          assert.equal(msg.fields.routingKey, finalKey);
+          ack();
           done();
-    		});
+        });
 
-    		queue.once('bound', function () {
-    			this.exchange.publish(message, { key: finalKey });
-    		}.bind(this));
-    	});
+        queue.once('bound', function () {
+          this.exchange.publish(message, { key: finalKey });
+        }.bind(this));
+      });
     });
   });
 
