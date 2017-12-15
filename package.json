@@ -19,7 +19,8 @@
   "bugs": "https://github.com/pagerinc/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec",
+    "lint": "eslint ."
   },
   "engines": {
     "node": ">= 0.10.x"
