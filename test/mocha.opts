@@ -1,0 +1,5 @@
+--reporter spec
+--ui bdd
+--recursive
+--bail
+--require test/env
