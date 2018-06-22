@@ -1,4 +1,4 @@
-language: bash
+language: node
 sudo: required
 services:
   - docker
