@@ -8,4 +8,4 @@ services:
 install: npm install
 script: npm test
 env: 
-  - RABBIT_URL="amqp://guest@guest:localhost"
+  - RABBIT_URL="amqp://localhost:5672"
