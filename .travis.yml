@@ -2,5 +2,5 @@ language: bash
 sudo: required
 services:
   - docker
-install: docker pull node
-script: docker-compose run jackrabbit
+install: docker pull node && npm install
+script: docker-compose run jackrabbit npm test

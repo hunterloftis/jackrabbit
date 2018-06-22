@@ -1,7 +1,6 @@
 jackrabbit:
   image: node
   working_dir: /code
-  command: ['npm install', 'npm test']
   volumes:
     - .:/code
   links:
