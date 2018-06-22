@@ -1,5 +1,7 @@
 # Jackrabbit
 
+[![Build Status][travis-image]][travis-url] [![NPM version][npm-image]][npm-url]
+
 RabbitMQ in Node.js without hating life.
 
 *producer.js:*
@@ -32,7 +34,7 @@ function onMessage(data) {
 
 Jackrabbit is designed for *simplicity* and an easy API.
 If you're an AMQP expert and want more power and flexibility,
-check out [wascally](https://github.com/LeanKit-Labs/wascally).
+check out [Rabbot](https://github.com/arobson/rabbot).
 
 ## Use
 
@@ -62,3 +64,8 @@ $ docker-machine start
 $ eval "$(docker-machine env default)"
 $ docker-compose run jackrabbit npm test
 ```
+
+[npm-image]: https://img.shields.io/npm/v/jackrabbit.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/jackrabbit
+[travis-image]: https://travis-ci.org/hunterloftis/jackrabbit.svg?branch=master
+[travis-url]: https://travis-ci.org/hunterloftis/jackrabbit
