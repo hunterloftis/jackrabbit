@@ -1,6 +1,9 @@
-language: bash
+language: node_js
+node: 7
 sudo: required
 services:
-  - docker
-install: docker pull node && npm install
-script: docker-compose run jackrabbit npm test
+  - rabbitmq
+install: npm install
+script: npm test
+env: 
+  - RABBIT_URL="amqp://guest@guest:localhost"
