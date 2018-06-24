@@ -2,7 +2,7 @@
 
 [![Build Status][travis-image]][travis-url] [![NPM version][npm-image]][npm-url]
 
-RabbitMQ in Node.js without hating life.
+[RabbitMQ](https://www.rabbitmq.com/) in Node.js without hating life.
 
 ## Simple Example
 
