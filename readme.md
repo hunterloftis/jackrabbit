@@ -44,11 +44,19 @@ rabbit
   .default()
   .queue({ name: 'important_job' })
   .consume(function(data, ack, nack, msg) {
+
     // process data...
     // and ACK on success
     ack();
+
     // or alternatively NACK on failure
+    // NOTE: this will requeue automatically
     nack();
+   
+    // or, if you want to nack without requeue:
+    nack({
+      requeue: false
+    });
   })
 ```
 
