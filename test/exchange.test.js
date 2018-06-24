@@ -1,3 +1,4 @@
+var Promise = require('bluebird');
 var assert = require('chai').assert;
 var amqp = require('amqplib/callback_api');
 var exchange = require('../lib/exchange');
@@ -59,12 +60,16 @@ describe('exchange', function() {
     it('emits a "connected" event', function(done) {
       exchange('', 'direct')
         .connect(this.connection)
-        .once('connected', done);
+          .once('connected', function (channel) {
+            assert.ok(channel.consume);
+            done();
+          });
     });
   });
 
   describe('#queue', function() {
     describe('with no options', function() {
+      var directExchange;
       before(function(done) {
         amqp.connect(process.env.RABBIT_URL, function(err, conn) {
           assert.ok(!err);
@@ -73,12 +78,34 @@ describe('exchange', function() {
         }.bind(this));
       });
       before(function() {
-        this.q = exchange('', 'direct')
+        directExchange = exchange('', 'direct');
+        this.q = directExchange
           .connect(this.connection)
-          .queue();
+            .queue({name: 'someQueue'});
       });
       it('returns a queue instance', function() {
         assert.ok(this.q.consume);
+      });
+      describe('delayed consume', function () {
+        it('should be able to attach consumer', function () {
+          var consumerSpyInvoked = false;
+
+          function consumerSpy() {
+            consumerSpyInvoked = true;
+          }
+
+          var q = this.q;
+          return new Promise(function (resolve) {
+            q.once('ready', resolve);
+          }).then(function () {
+                q.consume(consumerSpy, {noAck: true});
+                directExchange.publish('abc', {key: 'someQueue'});
+              })
+              .delay(100)
+              .then(function () {
+                assert.equal(true, consumerSpyInvoked);
+              });
+        });
       });
     });
 
