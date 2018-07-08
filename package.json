@@ -17,7 +17,9 @@
   "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec && npm run test-format",
+    "test-format": "./node_modules/prettier-eslint-cli/dist/index.js lib/**/*.js test/**/*.js --list-different",
+    "format": "./node_modules/prettier-eslint-cli/dist/index.js lib/**/*.js test/**/*.js --write"
   },
   "engines": {
     "node": ">= 0.10.x"
@@ -31,6 +33,8 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "prettier": "1.13.7",
+    "prettier-eslint-cli": "^4.7.1"
   }
 }
