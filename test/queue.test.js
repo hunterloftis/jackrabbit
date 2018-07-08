@@ -1,24 +1,22 @@
-var assert = require('chai').assert;
-var amqp = require('amqplib/callback_api');
-var uuid = require('uuid');
-var exchange = require('../lib/exchange');
-var queue = require('../lib/queue');
+var assert = require("chai").assert;
+var amqp = require("amqplib/callback_api");
+var uuid = require("uuid");
+var exchange = require("../lib/exchange");
+var queue = require("../lib/queue");
 
-describe('queue', function() {
-
-  describe('consume', function() {
-
+describe("queue", function() {
+  describe("consume", function() {
     before(createConnection);
 
     before(function() {
-      this.name = `test.queue.consume.${ uuid.v4() }`;
-      this.exchange = exchange('', 'direct')
+      this.name = `test.queue.consume.${uuid.v4()}`;
+      this.exchange = exchange("", "direct");
       this.exchange.connect(this.connection);
       this.queue = queue({ name: this.name });
       this.queue.connect(this.connection);
-    })
+    });
 
-    it('calls the message handler when a message arrives', function(done) {
+    it("calls the message handler when a message arrives", function(done) {
       var message = uuid.v4();
       var n = 3;
       var received = 0;
@@ -37,19 +35,18 @@ describe('queue', function() {
     });
   });
 
-  describe('cancel', function() {
-
+  describe("cancel", function() {
     before(createConnection);
 
     before(function() {
-      this.name = `test.queue.cancel.${ uuid.v4() }`;
-      this.exchange = exchange('', 'direct')
+      this.name = `test.queue.cancel.${uuid.v4()}`;
+      this.exchange = exchange("", "direct");
       this.exchange.connect(this.connection);
       this.queue = queue({ name: this.name });
       this.queue.connect(this.connection);
     });
 
-    it('initially consumes messages', function(done) {
+    it("initially consumes messages", function(done) {
       var message = uuid.v4();
 
       this.queue.consume(onMessage, { noAck: true });
@@ -61,28 +58,26 @@ describe('queue', function() {
       }
     });
 
-    it('calls back with ok', function(done) {
+    it("calls back with ok", function(done) {
       this.queue.cancel(done);
     });
 
-    it('stops consuming after cancel', function(done) {
-      this.exchange.publish('should not consume', {
+    it("stops consuming after cancel", function(done) {
+      this.exchange.publish("should not consume", {
         key: this.name,
         noAck: true
       });
 
       setTimeout(done, 250);
     });
-
   });
 
-  describe('purge', function() {
-
+  describe("purge", function() {
     before(createConnection);
 
     before(function() {
-      this.name = `test.queue.purge.${ uuid.v4() }`;
-      this.exchange = exchange('', 'direct')
+      this.name = `test.queue.purge.${uuid.v4()}`;
+      this.exchange = exchange("", "direct");
       this.exchange.connect(this.connection);
       this.queue = queue({ name: this.name });
       this.queue.connect(this.connection);
@@ -90,13 +85,13 @@ describe('queue', function() {
 
     before(function(done) {
       var n = 10;
-      while(n--) {
-        this.exchange.publish('test', { key: this.name });
+      while (n--) {
+        this.exchange.publish("test", { key: this.name });
       }
       setTimeout(done, 100);
     });
 
-    it('returns the number of messages purged', function(done) {
+    it("returns the number of messages purged", function(done) {
       this.queue.purge(function(err, count) {
         assert.ok(count > 5);
         done(err);
@@ -106,9 +101,12 @@ describe('queue', function() {
 });
 
 function createConnection(done) {
-  amqp.connect(process.env.RABBIT_URL, function(err, conn) {
-    assert.ok(!err);
-    this.connection = conn;
-    done();
-  }.bind(this));
+  amqp.connect(
+    process.env.RABBIT_URL,
+    function(err, conn) {
+      assert.ok(!err);
+      this.connection = conn;
+      done();
+    }.bind(this)
+  );
 }
