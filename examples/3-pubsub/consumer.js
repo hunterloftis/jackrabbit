@@ -1,4 +1,4 @@
-var jackrabbit = require('../..');
+var jackrabbit = require("../..");
 
 var rabbit = jackrabbit(process.env.RABBIT_URL);
 var exchange = rabbit.fanout();
@@ -8,5 +8,5 @@ logs.consume(onLog, { noAck: true });
 // logs.consume(false); // stops consuming
 
 function onLog(data) {
-  console.log('Received log:', data);
+  console.log("Received log:", data);
 }
