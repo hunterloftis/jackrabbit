@@ -1,6 +1,6 @@
 var assert = require('chai').assert;
 var amqp = require('amqplib/callback_api');
-var uuid = require('node-uuid');
+var uuid = require('uuid');
 var exchange = require('../lib/exchange');
 var queue = require('../lib/queue');
 
