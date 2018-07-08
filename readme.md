@@ -52,7 +52,7 @@ rabbit
     // or alternatively NACK on failure
     // NOTE: this will requeue automatically
     nack();
-   
+
     // or, if you want to nack without requeue:
     nack({
       requeue: false
@@ -97,3 +97,15 @@ $ docker-compose run jackrabbit npm test
 [npm-url]: https://npmjs.org/package/jackrabbit
 [travis-image]: https://travis-ci.org/hunterloftis/jackrabbit.svg?branch=master
 [travis-url]: https://travis-ci.org/hunterloftis/jackrabbit
+
+## Release
+
+Releases should be tagged according to (https://semver.org/)[Semantic Versioning]
+
+Process:
+
+- Add release notes to `releases.md`
+- Commit the release notes to a branch `releases/x.y.z`
+- Push the changes `git push origin releases/x.y.z`
+- Release it `./node_modules/release-it/bin/release-it.js --dry-run`
+- Open a PR to merge the release notes to master
