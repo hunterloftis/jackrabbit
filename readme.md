@@ -6,6 +6,10 @@
 
 ## Simple Example
 
+[![Build Status](https://travis-ci.org/hunterloftis/jackrabbit.svg?branch=master)](https://travis-ci.org/hunterloftis/jackrabbit)
+
+## Simple Example
+
 *producer.js:*
 
 ```js
@@ -44,7 +48,6 @@ rabbit
   .default()
   .queue({ name: 'important_job' })
   .consume(function(data, ack, nack, msg) {
-
     // process data...
     // and ACK on success
     ack();

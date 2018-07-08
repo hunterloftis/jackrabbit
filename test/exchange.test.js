@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var amqp = require('amqplib/callback_api');
 var exchange = require('../lib/exchange');
-var uuid = require('node-uuid');
+var uuid = require('uuid/v4');
 
 describe('exchange', function() {
 
@@ -96,7 +96,7 @@ describe('exchange', function() {
         var keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
         var finalKey = keys[keys.length - 1];
         var queue = this.exchange.queue({ keys: keys });
-        var message = uuid.v4();
+        var message = uuid();
 
     		queue.consume(function (data, ack, nack, msg) {
     			assert.equal(message, data);
