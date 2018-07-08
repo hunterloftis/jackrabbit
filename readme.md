@@ -1,6 +1,10 @@
 # Jackrabbit
 
-RabbitMQ in Node.js without hating life.
+[![Build Status][travis-image]][travis-url] [![NPM version][npm-image]][npm-url]
+
+[RabbitMQ](https://www.rabbitmq.com/) in Node.js without hating life.
+
+## Simple Example
 
 [![Build Status](https://travis-ci.org/hunterloftis/jackrabbit.svg?branch=master)](https://travis-ci.org/hunterloftis/jackrabbit)
 
@@ -47,14 +51,21 @@ rabbit
     // process data...
     // and ACK on success
     ack();
+
     // or alternatively NACK on failure
+    // NOTE: this will requeue automatically
     nack();
+   
+    // or, if you want to nack without requeue:
+    nack({
+      requeue: false
+    });
   })
 ```
 
 Jackrabbit is designed for *simplicity* and an easy API.
 If you're an AMQP expert and want more power and flexibility,
-check out [wascally](https://github.com/LeanKit-Labs/wascally).
+check out [Rabbot](https://github.com/arobson/rabbot).
 
 ## More Examples
 
@@ -84,3 +95,8 @@ $ docker-machine start
 $ eval "$(docker-machine env default)"
 $ docker-compose run jackrabbit npm test
 ```
+
+[npm-image]: https://img.shields.io/npm/v/jackrabbit.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/jackrabbit
+[travis-image]: https://travis-ci.org/hunterloftis/jackrabbit.svg?branch=master
+[travis-url]: https://travis-ci.org/hunterloftis/jackrabbit
