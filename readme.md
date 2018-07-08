@@ -100,12 +100,11 @@ $ docker-compose run jackrabbit npm test
 
 ## Release
 
-Releases should be tagged according to (https://semver.org/)[Semantic Versioning]
+Releases should be tagged according to [Semantic Versioning](https://semver.org/)
 
 Process:
 
 - Add release notes to `releases.md`
-- Commit the release notes to a branch `releases/x.y.z`
-- Push the changes `git push origin releases/x.y.z`
+- Commit add push the release notes `git commit releases.md && git push origin master`
 - Release it `./node_modules/release-it/bin/release-it.js --dry-run`
 - Open a PR to merge the release notes to master
