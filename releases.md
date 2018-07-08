@@ -1,5 +1,5 @@
 
-# 4.5.0
+# 4.4.0
 
 - add code quality tools: PR #92
 - add noReply option to exchange; pass options during init: PR #91
