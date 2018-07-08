@@ -1,13 +1,11 @@
-version: '3'
-services:
-  jackrabbit:
-    image: node
-    working_dir: /code
-    volumes:
-      - .:/code
-    depends_on:
-      - rabbit
-    environment:
-      RABBIT_URL: 'amqp://rabbit'
-  rabbit:
-    image: rabbitmq
+jackrabbit:
+  image: node
+  working_dir: /code
+  volumes:
+    - .:/code
+  links:
+    - rabbit
+  environment:
+    RABBIT_URL: 'amqp://rabbit'
+rabbit:
+  image: rabbitmq
