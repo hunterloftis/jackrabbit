@@ -8,4 +8,4 @@ jackrabbit:
   environment:
     RABBIT_URL: 'amqp://rabbit'
 rabbit:
-  image: rabbitmq
+  image: rabbitmq@sha256:437ea77f0651165726384bab7863578aee792805451badf712e71ebe8b68931b
