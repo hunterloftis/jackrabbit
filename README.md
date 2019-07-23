@@ -2,7 +2,7 @@
 
 RabbitMQ in Node.js without hating life.
 
-[![Build Status](https://travis-ci.org/pagerinc/jackrabbit.svg?branch=master)](https://travis-ci.org/pagerinc/jackrabbit)
+[![CircleCI](https://circleci.com/gh/pagerinc/jackrabbit.svg?style=svg)](https://circleci.com/gh/pagerinc/jackrabbit)
 
 ## Simple Example
 
