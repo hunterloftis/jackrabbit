@@ -32,7 +32,7 @@
     "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "chai": "3.x.x",
+    "chai": "4.x",
     "mocha": "3.x.x"
   }
 }
