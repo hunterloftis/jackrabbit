@@ -1,0 +1,65 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+  - image: circleci/node:10.16@sha256:5b116d71be70e4b7ee3814b36119c3c2e057917e146b8897891aeebe53d95148
+  - image: rabbitmq:3.7-alpine
+
+jobs:
+  test:
+    <<: *defaults
+    steps:
+    - checkout
+
+    - restore_cache:
+        keys:
+        - v1-dependencies-{{ checksum "package.json" }}
+        # fallback to using the latest cache if no exact match is found
+        - v1-dependencies-
+
+    - run: npm install
+    - run:
+        name: Wait for RabbitMQ to receive connections
+        command: dockerize -wait tcp://localhost:5672 -timeout 1m
+    - run:
+        name: Run tests
+        command: npm test
+
+    - save_cache:
+        paths:
+        - node_modules
+        key: v1-dependencies-{{ checksum "package.json" }}
+
+    - persist_to_workspace:
+        root: ~/repo
+        paths: .
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish
+
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /^v.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
