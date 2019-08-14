@@ -1,7 +1,8 @@
 {
   "name": "jackrabbit",
-  "version": "3.0.9",
-  "description": "Simple AMQP / RabbitMQ job queues for node",
+  "version": "4.4.0",
+  "description": "Easy RabbitMQ for node",
+  "readme": "https://github.com/hunterloftis/jackrabbit/blob/master/readme.md",
   "keywords": [
     "amqp",
     "rabbit",
@@ -16,7 +17,9 @@
   "bugs": "https://github.com/hunterloftis/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha -R spec && npm run test-format",
+    "test-format": "./node_modules/prettier-eslint-cli/dist/index.js lib/**/*.js test/**/*.js --list-different",
+    "format": "./node_modules/prettier-eslint-cli/dist/index.js lib/**/*.js test/**/*.js --write"
   },
   "engines": {
     "node": ">= 0.10.x"
@@ -24,14 +27,15 @@
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "^0.2.1",
-    "lodash": "^2.4.1",
-    "node-uuid": "^1.4.1"
+    "amqplib": "^0.4.2",
+    "lodash": "^3.10.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "chai": "^1.9.1",
-    "express": "^4.8.7",
-    "mocha": "^1.21.4",
-    "supertest": "^0.13.0"
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5",
+    "prettier": "1.13.7",
+    "prettier-eslint-cli": "^4.7.1",
+    "release-it": "^7.4.7"
   }
 }

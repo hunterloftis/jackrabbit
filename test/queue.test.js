@@ -1,153 +1,112 @@
-var assert = require('chai').assert;
-var jackrabbit = require('..');
-var Queue = require('../lib/queue');
-var util = require('./util');
+var assert = require("chai").assert;
+var amqp = require("amqplib/callback_api");
+var uuid = require("uuid");
+var exchange = require("../lib/exchange");
+var queue = require("../lib/queue");
 
-describe('jackrabbit', function() {
+describe("queue", function() {
+  describe("consume", function() {
+    before(createConnection);
 
-  describe('#create', function() {
-
-    describe('with a queue name', function() {
-
-      before(function connect(done) {
-        this.queue = jackrabbit(util.RABBIT_URL);
-        this.queue.once('connected', done);
-      });
-
-      before(function create(done) {
-        this.name = util.NAME;
-        this.queue.create(this.name, function(err, instance, info) {
-          this.instance = instance;
-          this.info = info;
-          done(err);
-        }.bind(this));
-      });
-
-      after(function cleanup(done) {
-        this.queue.destroy(this.name, done);
-      });
-
-      it('calls back with the Queue instance', function() {
-        assert.instanceOf(this.instance, Queue);
-      });
-
-      it('defaults to a durable queue', function() {
-        assert.equal(this.instance.durable, true);
-      });
-	  
-      it('server queue name matches', function() {
-        assert.equal(this.info.queue, this.name);
-      });
-	  
-      it('doesnt have awaiting messages', function() {
-        assert.equal(this.info.messageCount, 0);
-      });
-
+    before(function() {
+      this.name = `test.queue.consume.${uuid.v4()}`;
+      this.exchange = exchange("", "direct");
+      this.exchange.connect(this.connection);
+      this.queue = queue({ name: this.name });
+      this.queue.connect(this.connection);
     });
 
-    describe('with durability disabled in options', function() {
+    it("calls the message handler when a message arrives", function(done) {
+      var message = uuid.v4();
+      var n = 3;
+      var received = 0;
 
-      before(function connect(done) {
-        this.queue = jackrabbit(util.RABBIT_URL);
-        this.queue.once('connected', done);
-      });
+      this.queue.consume(onMessage, { noAck: true });
 
-      before(function create(done) {
-        this.name = util.NAME + '.durability';
-        this.queue.create(this.name, { durable: false }, function(err, instance) {
-          this.instance = instance;
-          done(err);
-        }.bind(this));
-      });
+      for (var i = 0; i < n; i++) {
+        this.exchange.publish(message, { key: this.name });
+      }
 
-      after(function(done) {
-        this.queue.destroy(this.name, done);
-      });
-
-      it('returns a non-durable queue', function() {
-        assert.equal(this.instance.durable, false);
-      });
-    });
-
-    describe('with conflicting options', function() {
-
-      before(function connect(done) {
-        this.queue = jackrabbit(util.RABBIT_URL);
-        this.queue.once('connected', done);
-      });
-
-      before(function createQueue(done) {
-        this.name = util.NAME + '.conflicting';
-        this.queue.create(this.name, { durable: false }, done);
-      });
-
-      after(function reconnect(done) {
-        this.queue = jackrabbit(util.RABBIT_URL);
-        this.queue.once('connected', done);
-      });
-
-      after(function cleanup(done) {
-        this.queue.destroy(this.name, done);
-      });
-
-      it('calls back with an error', function(done) {
-        this.queue.create(this.name, { durable: true }, function(err, instance) {
-          assert.ok(err);
-          assert.ok(!instance);
-          done();
-        });
-      });
+      function onMessage(data, ack, nack, msg) {
+        assert.equal(data, message);
+        received++;
+        if (received === n) done();
+      }
     });
   });
 
-  describe('#destroy', function() {
+  describe("cancel", function() {
+    before(createConnection);
 
-    before(function connect(done) {
-      this.queue = jackrabbit(util.RABBIT_URL);
-      this.queue.once('connected', done);
+    before(function() {
+      this.name = `test.queue.cancel.${uuid.v4()}`;
+      this.exchange = exchange("", "direct");
+      this.exchange.connect(this.connection);
+      this.queue = queue({ name: this.name });
+      this.queue.connect(this.connection);
     });
 
-    describe('with a queue that exists', function() {
+    it("initially consumes messages", function(done) {
+      var message = uuid.v4();
 
-      it('needs a queue', function(done) {
-        this.name = util.NAME + '.destroy';
-        this.queue.create(this.name, { durable: true }, done);
-      });
+      this.queue.consume(onMessage, { noAck: true });
+      this.exchange.publish(message, { key: this.name });
 
-      it('calls back without error', function(done) {
-        this.queue.destroy(this.name, function(err, destroyed) {
-          this.destroyed = destroyed;
-          done(err);
-        }.bind(this));
-      });
-
-      it('returns true that the queue was destroyed', function() {
-        assert.ok(this.destroyed);
-      });
-
-      it('allows the queue to be replaced', function(done) {
-        this.queue.create(this.name, { durable: false }, done);
-      });
+      function onMessage(data, ack, nack, msg) {
+        assert.equal(data, message);
+        done();
+      }
     });
 
-    describe("with a queue that doesn't exist", function() {
-
-      it('calls back without error', function(done) {
-        this.queue.destroy('nonexistant.queue', function(err, destroyed) {
-          this.destroyed = destroyed;
-          done(err);
-        }.bind(this));
-      });
-
-      it('returns false that the queue was destroyed', function() {
-        assert.ok(!this.destroy);
-      });
+    it("calls back with ok", function(done) {
+      this.queue.cancel(done);
     });
 
-    describe('without a queue name', function() {
-      it('should throw an error', function() {
-        assert.throws(this.queue.destroy);
+    it("stops consuming after cancel", function(done) {
+      this.exchange.publish("should not consume", {
+        key: this.name,
+        noAck: true
+      });
+
+      setTimeout(done, 250);
+    });
+  });
+
+  describe("purge", function() {
+    before(createConnection);
+
+    before(function() {
+      this.name = `test.queue.purge.${uuid.v4()}`;
+      this.exchange = exchange("", "direct");
+      this.exchange.connect(this.connection);
+      this.queue = queue({ name: this.name });
+      this.queue.connect(this.connection);
+    });
+
+    before(function(done) {
+      var n = 10;
+      while (n--) {
+        this.exchange.publish("test", { key: this.name });
+      }
+      setTimeout(done, 100);
+    });
+
+    it("returns the number of messages purged", function(done) {
+      this.queue.purge(function(err, count) {
+        assert.ok(count > 5);
+        done(err);
       });
     });
   });
 });
+
+function createConnection(done) {
+  amqp.connect(
+    process.env.RABBIT_URL,
+    function(err, conn) {
+      assert.ok(!err);
+      this.connection = conn;
+      done();
+    }.bind(this)
+  );
+}
