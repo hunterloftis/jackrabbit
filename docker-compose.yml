@@ -1,11 +1,12 @@
-jackrabbit:
-  image: node@sha256:6e64f63a663a368cc81b28ed3c3e29e6b3784c04f0128be5aaa659157ed4d231
-  working_dir: /code
-  volumes:
-    - .:/code
-  links:
-    - rabbit
-  environment:
-    RABBIT_URL: 'amqp://rabbit'
-rabbit:
-  image: rabbitmq@sha256:437ea77f0651165726384bab7863578aee792805451badf712e71ebe8b68931b
+version: '3'
+
+services:
+  jackrabbit:
+    build: .
+    environment:
+      RABBIT_URL: 'amqp://rabbit'
+    restart: on-failure
+  rabbit:
+    image: rabbitmq@sha256:437ea77f0651165726384bab7863578aee792805451badf712e71ebe8b68931b
+    ports:
+      - "5672:5672"

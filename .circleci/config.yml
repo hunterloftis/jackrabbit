@@ -3,12 +3,14 @@ version: 2
 defaults: &defaults
   working_directory: ~/repo
   docker:
-  - image: circleci/node:10.16@sha256:d4e0feb0389eb1891d774a4588b81d769e2cb978b528fd7a5673b2b35453dab4
+  - image: circleci/node:10.16@sha256:564e5acb34511a45cac1e3b4c0969370ec798a9642064699d3ad17b84e5ef28d
   - image: rabbitmq:3.7-alpine@sha256:bc92e61664e10cd6dc7a9bba3d39a18a446552f9dc40d2eb68c19818556c3201
 
 jobs:
   test:
     <<: *defaults
+    environment:
+      RABBIT_URL=amqp://localhost
     steps:
     - checkout
 
@@ -19,6 +21,7 @@ jobs:
         - v1-dependencies-
 
     - run: npm install
+    - run: npm run lint
     - run:
         name: Wait for RabbitMQ to receive connections
         command: dockerize -wait tcp://localhost:5672 -timeout 1m
