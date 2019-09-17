@@ -6,7 +6,7 @@ const Uuid = require('uuid/v4');
 const Exchange = require('../lib/exchange');
 const Queue = require('../lib/queue');
 
-const { describe, before, it } = require('mocha');
+const { after, before, describe, it } = require('mocha');
 
 const createConnection = (done) => {
 
@@ -56,6 +56,11 @@ describe('queue', () => {
                 this.exchange.publish(message, { key: this.name });
             }
         });
+
+        after((done) => {
+
+            this.connection.close(done);
+        });
     });
 
     describe('cancel', () => {
@@ -100,6 +105,10 @@ describe('queue', () => {
             setTimeout(done, 250);
         });
 
+        after((done) => {
+
+            this.connection.close(done);
+        });
     });
 
     describe('purge', () => {
@@ -132,6 +141,11 @@ describe('queue', () => {
                 Assert.ok(count > 5);
                 done(err);
             });
+        });
+
+        after((done) => {
+
+            this.connection.close(done);
         });
     });
 });

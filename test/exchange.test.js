@@ -5,7 +5,7 @@ const Amqp = require('amqplib/callback_api');
 const Exchange = require('../lib/exchange');
 const Uuid = require('uuid/v4');
 
-const { before, describe, it } = require('mocha');
+const { after, before, describe, it } = require('mocha');
 
 describe('exchange', () => {
 
@@ -80,6 +80,11 @@ describe('exchange', () => {
                 .connect(this.connection)
                 .once('connected', done);
         });
+
+        after((done) => {
+
+            this.connection.close(done);
+        });
     });
 
     describe('#queue', () => {
@@ -92,20 +97,21 @@ describe('exchange', () => {
 
                     Assert.ok(!err);
                     this.connection = conn;
+                    this.q = Exchange('', 'direct')
+                        .connect(this.connection)
+                        .queue();
                     done();
                 });
-            });
-
-            before(() => {
-
-                this.q = Exchange('', 'direct')
-                    .connect(this.connection)
-                    .queue();
             });
 
             it('returns a queue instance', () => {
 
                 Assert.ok(this.q.consume);
+            });
+
+            after((done) => {
+
+                this.connection.close(done);
             });
         });
 
@@ -116,6 +122,7 @@ describe('exchange', () => {
                 const connect = (err, conn) => {
 
                     Assert.ok(!err);
+                    this.connection = conn;
                     this.exchange = Exchange('test.topic.bindings', 'topic')
                         .connect(conn)
                         .once('connected', done);
@@ -144,10 +151,11 @@ describe('exchange', () => {
                     this.exchange.publish(message, { key: finalKey });
                 });
             });
+
+            after((done) => {
+
+                this.connection.close(done);
+            });
         });
-    });
-
-    describe('#publish', () => {
-
     });
 });

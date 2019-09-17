@@ -18,7 +18,7 @@
   "homepage": "https://github.com/pagerinc/jackrabbit",
   "bugs": "https://github.com/pagerinc/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
-  "scripts": {
+  "scripts": {  
     "test": "mocha",
     "lint": "eslint lib/** test/**"
   },
@@ -41,6 +41,7 @@
   },
   "mocha": {
     "bail": true,
+    "exit": true,
     "recursive": true
   }
 }

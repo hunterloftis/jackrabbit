@@ -9,6 +9,8 @@ defaults: &defaults
 jobs:
   test:
     <<: *defaults
+    environment:
+      RABBIT_URL=amqp://localhost
     steps:
     - checkout
 
