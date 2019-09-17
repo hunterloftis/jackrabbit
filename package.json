@@ -19,24 +19,28 @@
   "bugs": "https://github.com/pagerinc/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "scripts": {
-    "test": "mocha -R spec",
-    "lint": "eslint ."
+    "test": "mocha",
+    "lint": "eslint lib/** test/**"
   },
   "engines": {
-    "node": ">= 0.10.x"
+    "node": ">= 10.x"
   },
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "^0.5.1",
+    "amqplib": "0.5.x",
     "lodash.assignin": "4.x.x",
-    "uuid": "^3.0.1"
+    "uuid": "3.x.x"
   },
   "devDependencies": {
-    "chai": "4.x",
+    "chai": "4.x.x",
     "eslint": "6.x.x",
     "eslint-config-hapi": "12.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "mocha": "3.x.x"
+    "mocha": "6.x.x"
+  },
+  "mocha": {
+    "bail": true,
+    "recursive": true
   }
 }
