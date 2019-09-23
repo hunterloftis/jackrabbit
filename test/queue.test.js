@@ -6,33 +6,51 @@ const Uuid = require('uuid/v4');
 const Exchange = require('../lib/exchange');
 const Queue = require('../lib/queue');
 
-const { after, before, describe, it } = require('mocha');
-
-const createConnection = (done) => {
-
-    const connect = (err, conn) => {
-
-        Assert.ok(!err);
-        this.connection = conn;
-        done();
-    };
-
-    Amqp.connect(process.env.RABBIT_URL, connect.bind(this));
-};
+const { afterEach, beforeEach, describe, it } = require('mocha');
 
 describe('queue', () => {
 
+    let connection;
+    let exchange;
+
+    beforeEach((done) => {
+
+        const connect = (err, conn) => {
+
+            Assert.ok(!err);
+            connection = conn;
+            exchange = Exchange('', 'direct');
+            exchange.connect(connection);
+            done();
+        };
+
+        Amqp.connect(process.env.RABBIT_URL, connect.bind(this));
+    });
+
+    afterEach((done) => {
+
+        connection.close(done);
+    });
+
     describe('consume', () => {
 
-        before(createConnection);
+        let name;
+        let queue;
 
-        before(() => {
+        beforeEach((done) => {
 
-            this.name = `test.queue.consume.${ Uuid() }`;
-            this.exchange = Exchange('', 'direct');
-            this.exchange.connect(this.connection);
-            this.queue = Queue({ name: this.name });
-            this.queue.connect(this.connection);
+            name = `test.queue.consume`;
+            queue = Queue({ name, durable: false, exclusive: true });
+            queue.on('connected', done);
+            queue.connect(connection);
+        });
+
+        afterEach((done) => {
+
+            queue.purge(() => {
+
+                queue.cancel(done);
+            });
         });
 
         it('calls the message handler when a message arrives', (done) => {
@@ -50,35 +68,22 @@ describe('queue', () => {
             const n = 3;
             let received = 0;
 
-            this.queue.consume(onMessage, { noAck: true });
+            queue.consume(onMessage, { noAck: true });
 
             for (let i = 0; i < n; ++i) {
-                this.exchange.publish(message, { key: this.name });
+                exchange.publish(message, { key: name });
             }
         });
 
-        after((done) => {
+        it('calls back with ok', (done) => {
 
-            this.connection.close(done);
-        });
-    });
-
-    describe('cancel', () => {
-
-        before(createConnection);
-
-        before(() => {
-
-            this.name = `test.queue.cancel.${ Uuid() }`;
-            this.exchange = Exchange('', 'direct');
-            this.exchange.connect(this.connection);
-            this.queue = Queue({ name: this.name });
-            this.queue.connect(this.connection);
+            queue.on('consuming', done);
+            queue.consume(() => { });
         });
 
         it('initially consumes messages', (done) => {
 
-            const onMessage = (data, ack, nack, msg) => {
+            const onMessage = (data) => {
 
                 Assert.equal(data, message);
                 done();
@@ -86,66 +91,79 @@ describe('queue', () => {
 
             const message = Uuid();
 
-            this.queue.consume(onMessage, { noAck: true });
-            this.exchange.publish(message, { key: this.name });
+            queue.consume(onMessage, { noAck: true });
+            exchange.publish(message, { key: name });
+        });
+    });
+
+    describe('cancel', () => {
+
+        let queue;
+        let name;
+
+        beforeEach((done) => {
+
+            name = `test.cancel`;
+            queue = Queue({ name, durable: false, exclusive: true });
+            queue.on('connected', done);
+            queue.connect(connection);
         });
 
-        it('calls back with ok', (done) => {
+        afterEach((done) => {
 
-            this.queue.cancel(done);
+            queue.purge(() => {
+
+                queue.cancel(done);
+            });
         });
 
         it('stops consuming after cancel', (done) => {
 
-            this.exchange.publish('should not consume', {
-                key: this.name,
-                noAck: true
+            queue.consume(() => {
+
+                done(new Error('should not consume'));
             });
 
-            setTimeout(done, 250);
-        });
+            queue.on('consuming', () => {
 
-        after((done) => {
+                queue.cancel(() => {
 
-            this.connection.close(done);
+                    exchange.publish('should not publish', { key: name });
+                    setTimeout(done, 50);
+                });
+            });
         });
     });
 
     describe('purge', () => {
 
-        before(createConnection);
+        let name;
+        let queue;
+        let messageCount;
 
-        before(() => {
+        beforeEach((done) => {
 
-            this.name = `test.queue.purge.${ Uuid() }`;
-            this.exchange = Exchange('', 'direct');
-            this.exchange.connect(this.connection);
-            this.queue = Queue({ name: this.name });
-            this.queue.connect(this.connection);
-        });
+            name = `test.queue.purge`;
+            queue = Queue({ name, durable: false, exclusive: true });
+            queue.on('connected', () => {
 
-        before((done) => {
+                messageCount = 10;
+                for (let i = 0; i < messageCount; ++i) {
+                    exchange.publish('test', { key: name });
+                }
 
-            let n = 10;
-            while (n--) {
-                this.exchange.publish('test', { key: this.name });
-            }
-
-            setTimeout(done, 100);
+                setTimeout(done, 50);
+            });
+            queue.connect(connection);
         });
 
         it('returns the number of messages purged', (done) => {
 
-            this.queue.purge((err, count) => {
+            queue.purge((err, count) => {
 
-                Assert.ok(count > 5);
+                Assert.equal(count, messageCount);
                 done(err);
             });
-        });
-
-        after((done) => {
-
-            this.connection.close(done);
         });
     });
 });

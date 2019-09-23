@@ -5,7 +5,7 @@ const Amqp = require('amqplib/callback_api');
 const Exchange = require('../lib/exchange');
 const Uuid = require('uuid/v4');
 
-const { after, before, describe, it } = require('mocha');
+const { afterEach, beforeEach, describe, it } = require('mocha');
 
 describe('exchange', () => {
 
@@ -64,78 +64,81 @@ describe('exchange', () => {
 
     describe('#connect', () => {
 
-        before((done) => {
+        let connection;
+
+        beforeEach((done) => {
 
             Amqp.connect(process.env.RABBIT_URL, (err, conn) => {
 
                 Assert.ok(!err);
-                this.connection = conn;
+                connection = conn;
                 done();
             });
+        });
+
+        afterEach((done) => {
+
+            connection.close(done);
         });
 
         it('emits a "connected" event', (done) => {
 
             Exchange('', 'direct')
-                .connect(this.connection)
+                .connect(connection)
                 .once('connected', done);
-        });
-
-        after((done) => {
-
-            this.connection.close(done);
         });
     });
 
     describe('#queue', () => {
 
+        let connection;
+
+        beforeEach((done) => {
+
+            Amqp.connect(process.env.RABBIT_URL, (err, conn) => {
+
+                Assert.ok(!err);
+                connection = conn;
+                done();
+            });
+        });
+
+        afterEach((done) => {
+
+            connection.close(done);
+        });
+
         describe('with no options', () => {
 
-            before((done) => {
+            it('returns a queue instance', (done) => {
 
-                Amqp.connect(process.env.RABBIT_URL, (err, conn) => {
+                const queue = Exchange('', 'direct')
+                    .connect(connection)
+                    .queue({ exclusive: true });
+                queue.on('connected', () => {
 
-                    Assert.ok(!err);
-                    this.connection = conn;
-                    this.q = Exchange('', 'direct')
-                        .connect(this.connection)
-                        .queue();
+                    Assert.ok(queue.consume);
                     done();
                 });
-            });
-
-            it('returns a queue instance', () => {
-
-                Assert.ok(this.q.consume);
-            });
-
-            after((done) => {
-
-                this.connection.close(done);
             });
         });
 
         describe('with key bindings', () => {
 
-            before((done) => {
+            let exchange;
 
-                const connect = (err, conn) => {
+            beforeEach((done) => {
 
-                    Assert.ok(!err);
-                    this.connection = conn;
-                    this.exchange = Exchange('test.topic.bindings', 'topic')
-                        .connect(conn)
-                        .once('connected', done);
-                };
-
-                Amqp.connect(process.env.RABBIT_URL, connect.bind(this));
+                exchange = Exchange('test.topic.bindings', 'topic')
+                    .connect(connection)
+                    .once('connected', done);
             });
 
             it('emits a "bound" event when all routing keys have been bound to the queue', (done) => {
 
                 const keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
                 const finalKey = keys[keys.length - 1];
-                const queue = this.exchange.queue({ keys });
+                const queue = exchange.queue({ keys, exclusive: true });
                 const message = Uuid();
 
                 queue.consume((data, ack, nack, msg) => {
@@ -143,18 +146,13 @@ describe('exchange', () => {
                     Assert.equal(message, data);
                     Assert.equal(msg.fields.routingKey, finalKey);
                     ack();
-                    done();
+                    queue.cancel(done);
                 });
 
                 queue.once('bound', () => {
 
-                    this.exchange.publish(message, { key: finalKey });
+                    exchange.publish(message, { key: finalKey });
                 });
-            });
-
-            after((done) => {
-
-                this.connection.close(done);
             });
         });
     });

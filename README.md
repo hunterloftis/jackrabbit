@@ -75,13 +75,5 @@ so you don't need to install rabbitmq (or even node)
 to run them:
 
 ```
-$ docker-compose run jackrabbit npm test
-```
-
-If using Docker-Machine on OSX:
-
-```
-$ docker-machine start
-$ eval "$(docker-machine env default)"
-$ docker-compose run jackrabbit npm test
+$ docker-compose up
 ```

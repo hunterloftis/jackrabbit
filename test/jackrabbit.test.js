@@ -3,33 +3,31 @@
 const Assert = require('chai').assert;
 const Jackrabbit = require('../lib/jackrabbit');
 
-const { after, before, describe, it } = require('mocha');
+const { after, afterEach, before, beforeEach, describe, it } = require('mocha');
 
 describe('jackrabbit', () => {
+
+    let rabbit;
+
+    beforeEach((done) => {
+
+        rabbit = Jackrabbit(process.env.RABBIT_URL);
+        rabbit.once('connected', done);
+    });
+
+    afterEach((done) => {
+
+        rabbit.close(done);
+    });
 
     describe('constructor', () => {
 
         describe('with a valid server url', () => {
 
-            before(() => {
-
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-            });
-
-            it('emits a "connected" event', (done) => {
-
-                this.r.once('connected', done);
-            });
-
             it('references a Connection object', () => {
 
-                const c = this.r.getInternals().connection;
+                const c = rabbit.getInternals().connection;
                 Assert.ok(c.connection.stream.writable);
-            });
-
-            after((done) => {
-
-                this.r.close(done);
             });
         });
 
@@ -57,86 +55,69 @@ describe('jackrabbit', () => {
 
         describe('without a "name" argument', () => {
 
-            before(() => {
+            let exchange;
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.e = this.r.default();
+            beforeEach(() => {
+
+                exchange = rabbit.default();
             });
 
             it('returns a direct, nameless exchange', () => {
 
-                Assert.ok(this.e.queue);
-                Assert.ok(this.e.publish);
-                Assert.equal(this.e.type, 'direct');
-                Assert.equal(this.e.name, '');
-            });
-
-            after((done) => {
-
-                this.r.close(done);
+                Assert.ok(exchange.queue);
+                Assert.ok(exchange.publish);
+                Assert.equal(exchange.type, 'direct');
+                Assert.equal(exchange.name, '');
             });
         });
 
         describe('with a "name" argument', () => {
 
+            let exchange;
+
             before(() => {
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.e = this.r.default('foobar');
+                exchange = rabbit.default('foobar');
             });
 
             it('returns a direct, nameless exchange', () => {
 
-                Assert.ok(this.e.queue);
-                Assert.ok(this.e.publish);
-                Assert.equal(this.e.type, 'direct');
-                Assert.equal(this.e.name, '');
-            });
-
-            after((done) => {
-
-                this.r.close(done);
+                Assert.ok(exchange.queue);
+                Assert.ok(exchange.publish);
+                Assert.equal(exchange.type, 'direct');
+                Assert.equal(exchange.name, '');
             });
         });
 
         describe('before connection is established', () => {
 
-            before(() => {
+            let beforeRabbit;
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
+            beforeEach(() => {
+
+                beforeRabbit = Jackrabbit(process.env.RABBIT_URL);
             });
 
             it('passes the connection to the exchange', (done) => {
 
-                this.r
+                beforeRabbit
                     .default()
                     .once('connected', done);
             });
 
-            after((done) => {
+            afterEach((done) => {
 
-                this.r.close(done);
+                beforeRabbit.close(done);
             });
         });
 
         describe('after connection is established', () => {
 
-            before((done) => {
-
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.r.once('connected', done);
-            });
-
             it('passes the connection to the exchange', (done) => {
 
-                this.r
+                rabbit
                     .default()
                     .once('connected', done);
-            });
-
-            after((done) => {
-
-                this.r.close(done);
             });
         });
     });
@@ -145,86 +126,69 @@ describe('jackrabbit', () => {
 
         describe('without a "name" argument', () => {
 
-            before(() => {
+            let exchange;
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.e = this.r.direct();
+            beforeEach(() => {
+
+                exchange = rabbit.direct();
             });
 
             it('returns the direct exchange named "amq.direct"', () => {
 
-                Assert.ok(this.e.queue);
-                Assert.ok(this.e.publish);
-                Assert.equal(this.e.type, 'direct');
-                Assert.equal(this.e.name, 'amq.direct');
-            });
-
-            after((done) => {
-
-                this.r.close(done);
+                Assert.ok(exchange.queue);
+                Assert.ok(exchange.publish);
+                Assert.equal(exchange.type, 'direct');
+                Assert.equal(exchange.name, 'amq.direct');
             });
         });
 
         describe('with a "name" argument of "foobar.direct"', () => {
 
-            before(() => {
+            let exchange;
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.e = this.r.direct('foobar.direct');
+            beforeEach(() => {
+
+                exchange = rabbit.direct('foobar.direct');
             });
 
             it('returns a direct exchange named "foobar.direct"', () => {
 
-                Assert.ok(this.e.queue);
-                Assert.ok(this.e.publish);
-                Assert.equal(this.e.type, 'direct');
-                Assert.equal(this.e.name, 'foobar.direct');
-            });
-
-            after((done) => {
-
-                this.r.close(done);
+                Assert.ok(exchange.queue);
+                Assert.ok(exchange.publish);
+                Assert.equal(exchange.type, 'direct');
+                Assert.equal(exchange.name, 'foobar.direct');
             });
         });
 
         describe('before connection is established', () => {
 
+            let beforeRabbit;
+
             before(() => {
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
+                beforeRabbit = Jackrabbit(process.env.RABBIT_URL);
             });
 
             it('passes the connection to the exchange', (done) => {
 
-                this.r
+                beforeRabbit
                     .direct()
                     .once('connected', done);
             });
 
             after((done) => {
 
-                this.r.close(done);
+                beforeRabbit.close(done);
             });
         });
 
         describe('after connection is established', () => {
 
-            before((done) => {
-
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.r.once('connected', done);
-            });
-
             it('passes the connection to the exchange', (done) => {
 
-                this.r
+                rabbit
                     .direct()
                     .once('connected', done);
-            });
-
-            after((done) => {
-
-                this.r.close(done);
             });
         });
     });
@@ -233,113 +197,85 @@ describe('jackrabbit', () => {
 
         describe('without a "name" argument', () => {
 
+            let exchange;
+
             before(() => {
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.e = this.r.fanout();
+                exchange = rabbit.fanout();
             });
 
             it('returns the direct exchange named "amq.fanout"', () => {
 
-                Assert.ok(this.e.queue);
-                Assert.ok(this.e.publish);
-                Assert.equal(this.e.type, 'fanout');
-                Assert.equal(this.e.name, 'amq.fanout');
-            });
-
-            after((done) => {
-
-                this.r.close(done);
+                Assert.ok(exchange.queue);
+                Assert.ok(exchange.publish);
+                Assert.equal(exchange.type, 'fanout');
+                Assert.equal(exchange.name, 'amq.fanout');
             });
         });
 
         describe('with a "name" argument of "foobar.fanout"', () => {
 
+            let exchange;
+
             before(() => {
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.e = this.r.fanout('foobar.fanout');
+                exchange = rabbit.fanout('foobar.fanout');
             });
 
             it('returns a direct exchange named "foobar.fanout"', () => {
 
-                Assert.ok(this.e.queue);
-                Assert.ok(this.e.publish);
-                Assert.equal(this.e.type, 'fanout');
-                Assert.equal(this.e.name, 'foobar.fanout');
-            });
-
-            after((done) => {
-
-                this.r.close(done);
+                Assert.ok(exchange.queue);
+                Assert.ok(exchange.publish);
+                Assert.equal(exchange.type, 'fanout');
+                Assert.equal(exchange.name, 'foobar.fanout');
             });
         });
 
         describe('before connection is established', () => {
 
+            let beforeRabbit;
 
             before(() => {
 
-                this.r = Jackrabbit(process.env.RABBIT_URL);
+                beforeRabbit = Jackrabbit(process.env.RABBIT_URL);
             });
 
             it('passes the connection to the exchange', (done) => {
 
-                this.r
+                beforeRabbit
                     .fanout()
                     .once('connected', done);
             });
 
             after((done) => {
 
-                this.r.close(done);
+                beforeRabbit.close(done);
             });
         });
 
         describe('after connection is established', () => {
 
-            before((done) => {
-
-                this.r = Jackrabbit(process.env.RABBIT_URL);
-                this.r.once('connected', done);
-            });
-
             it('passes the connection to the exchange', (done) => {
 
-                this.r
+                rabbit
                     .fanout()
                     .once('connected', done);
-            });
-
-            after((done) => {
-
-                this.r.close(done);
             });
         });
     });
 
     describe('#close', () => {
 
-        before((done) => {
+        it('clears the connection', (done) => {
 
-            this.r = Jackrabbit(process.env.RABBIT_URL);
-            this.r.once('connected', done);
-        });
+            rabbit.close(() => {
 
-        it('emits a "close" event', (done) => {
+                rabbit.getInternals().connection.on('close', () => {
 
-            this.r.once('close', done);
-            this.r.close();
-        });
-
-        it('clears the connection', () => {
-
-            Assert.ok(!this.r.getInternals().connection);
-        });
-
-        after((done) => {
-
-            this.r.close(done);
+                    Assert.ok(!rabbit.getInternals().connection);
+                    done();
+                });
+            });
         });
     });
 });
