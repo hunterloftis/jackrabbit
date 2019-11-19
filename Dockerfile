@@ -1,4 +1,4 @@
-FROM node:12.13-alpine@sha256:36a15a00134761c19e4438d948ad01eb9323811e1edd947562da3fc06ae78b09
+FROM node:12.13-alpine@sha256:2f93c0dfb2b6d757fb60c0f7d58d7e50fdffe1dd6a505faa068ec3feb66bb812
 
 RUN apk add --no-cache tini
 
