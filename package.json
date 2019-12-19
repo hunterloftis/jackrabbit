@@ -23,7 +23,7 @@
   "bugs": "https://github.com/pagerinc/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
   "engines": {
-    "node": ">= 10.x"
+    "node": ">= v10.18.0"
   },
   "license": "MIT",
   "author": "Pager Developers <engeneering@pager.com>",
