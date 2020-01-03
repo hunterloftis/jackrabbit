@@ -10,7 +10,7 @@ RabbitMQ in Node.js without hating life.
 *producer.js:*
 
 ```js
-var jackrabbit = require('jackrabbit');
+var jackrabbit = require('@pager/jackrabbit');
 var rabbit = jackrabbit(process.env.RABBIT_URL);
 
 rabbit
@@ -22,7 +22,7 @@ rabbit
 *consumer.js:*
 
 ```js
-var jackrabbit = require('jackrabbit');
+var jackrabbit = require('@pager/jackrabbit');
 var rabbit = jackrabbit(process.env.RABBIT_URL);
 
 rabbit
@@ -38,7 +38,7 @@ function onMessage(data) {
 ## Ack/Nack Consumer Example
 
 ```js
-var jackrabbit = require('jackrabbit');
+var jackrabbit = require('@pager/jackrabbit');
 var rabbit = jackrabbit(process.env.RABBIT_URL);
 
 rabbit

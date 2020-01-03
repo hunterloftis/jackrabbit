@@ -1,15 +1,19 @@
 {
   "name": "@pager/jackrabbit",
-  "version": "4.8.1",
+  "version": "4.8.2",
   "description": "Easy RabbitMQ for node",
   "keywords": [
     "amqp",
+    "rabbitmq",
     "rabbit",
     "job",
     "jobs",
     "queue",
     "task",
-    "resqueue"
+    "resqueue",
+    "rpc",
+    "drpc",
+    "distributed-rpc"
   ],
   "repository": {
     "type": "git",
@@ -18,15 +22,15 @@
   "homepage": "https://github.com/pagerinc/jackrabbit",
   "bugs": "https://github.com/pagerinc/jackrabbit/issues",
   "main": "lib/jackrabbit.js",
-  "scripts": {
-    "test": "mocha",
-    "lint": "eslint lib/** test/**"
-  },
   "engines": {
     "node": ">= 10.x"
   },
-  "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
+  "author": "Pager Developers <engeneering@pager.com>",
+  "contributors": [
+    "Pager Developers <engeneering@pager.com>",
+    "Hunter Loftis <hunter@hunterloftis.com>"
+  ],
   "dependencies": {
     "amqplib": "0.5.x",
     "lodash.assignin": "4.x.x",
@@ -42,5 +46,9 @@
   "mocha": {
     "bail": true,
     "recursive": true
+  },
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint lib/** test/**"
   }
 }
