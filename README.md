@@ -1,17 +1,21 @@
 # Jackrabbit
 
+This is an actively maintained fork of [hunterloftis/jackrabbit], a library for
 RabbitMQ in Node.js without hating life.
 
 [![CircleCI](https://circleci.com/gh/pagerinc/jackrabbit.svg?style=svg)](https://circleci.com/gh/pagerinc/jackrabbit)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
+Jackrabbit is a very opinionated abstraction built on top of `amqplib` focused
+on usability and implementing several messaging patterns on RabbitMQ.
 
 ## Simple Example
 
-*producer.js:*
-
 ```js
-var jackrabbit = require('@pager/jackrabbit');
-var rabbit = jackrabbit(process.env.RABBIT_URL);
+// producer.js
+'use strict';
+
+const jackrabbit = require('@pager/jackrabbit');
+const rabbit = jackrabbit(process.env.RABBIT_URL);
 
 rabbit
   .default()
@@ -19,11 +23,12 @@ rabbit
   .on('drain', rabbit.close);
 ```
 
-*consumer.js:*
-
 ```js
-var jackrabbit = require('@pager/jackrabbit');
-var rabbit = jackrabbit(process.env.RABBIT_URL);
+// consumer.js
+'use strict';
+
+const jackrabbit = require('@pager/jackrabbit');
+const rabbit = jackrabbit(process.env.RABBIT_URL);
 
 rabbit
   .default()
@@ -38,8 +43,10 @@ function onMessage(data) {
 ## Ack/Nack Consumer Example
 
 ```js
-var jackrabbit = require('@pager/jackrabbit');
-var rabbit = jackrabbit(process.env.RABBIT_URL);
+'use strict';
+
+const jackrabbit = require('@pager/jackrabbit');
+const rabbit = jackrabbit(process.env.RABBIT_URL);
 
 rabbit
   .default()
@@ -53,13 +60,9 @@ rabbit
   })
 ```
 
-Jackrabbit is designed for *simplicity* and an easy API.
-If you're an AMQP expert and want more power and flexibility,
-check out [wascally](https://github.com/LeanKit-Labs/wascally).
-
 ## More Examples
 
-For now, the best usage help is can be found in [examples](https://github.com/hunterloftis/jackrabbit/tree/master/examples),
+For now, the best usage help is can be found in [examples](https://github.com/pagerinc/jackrabbit/tree/master/examples),
 which map 1-to-1 with the official RabbitMQ tutorials.
 
 ## Installation
@@ -77,3 +80,5 @@ to run them:
 ```
 $ docker-compose up
 ```
+
+[hunterloftis/jackrabbit]: https://github.com/hunterloftis/jackrabbit
