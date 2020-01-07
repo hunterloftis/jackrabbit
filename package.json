@@ -26,7 +26,7 @@
     "node": ">= v10.18.0"
   },
   "license": "MIT",
-  "author": "Pager Developers <engeneering@pager.com>",
+  "author": "Pager Developers <engineering@pager.com>",
   "contributors": [
     "Pager Developers <engineering@pager.com>",
     "Hunter Loftis <hunter@hunterloftis.com>"
