@@ -41,7 +41,7 @@
     "eslint": "6.x.x",
     "eslint-config-hapi": "12.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "mocha": "6.x.x"
+    "mocha": "7.x"
   },
   "mocha": {
     "bail": true,
