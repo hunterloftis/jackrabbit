@@ -3,9 +3,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 9
   },
-  rules: {
-    "no-console": 2
-  },
+  rules: {},
   globals: {
     describe: true,
     it: true,

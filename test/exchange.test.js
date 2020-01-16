@@ -155,13 +155,13 @@ describe('exchange', () => {
             it('emits a "bound" event when all routing keys have been bound to the queue', (done) => {
 
                 const exchange = Exchange('test.topic.bindings', 'topic')
-                    .connect(connection)
-                    .once('connected', done);
+                    .connect(connection);
 
                 const keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
                 const finalKey = keys[keys.length - 1];
-                const queue = exchange.queue({ keys, exclusive: true });
                 const message = Uuid();
+
+                const queue = exchange.queue({ keys, exclusive: true });
 
                 queue.consume((data, ack, nack, msg) => {
 
@@ -175,6 +175,22 @@ describe('exchange', () => {
 
                     exchange.publish(message, { key: finalKey });
                 });
+            });
+
+            it('throws an error if rpcClient created with no replyQueue', () => {
+
+                const exchange = Exchange('test.rpc', 'direct')
+                    .connect(connection);
+
+                Assert.throws(() => exchange.rpcClient('test', {}));
+            });
+
+            it('throws an error if rpcServer created with no replyQueue', () => {
+
+                const exchange = Exchange('test.rpc', 'direct')
+                    .connect(connection);
+
+                Assert.throws(() => exchange.rpcServer('test', () => {}));
             });
         });
     });

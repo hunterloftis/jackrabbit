@@ -1,12 +1,20 @@
 version: '3'
 
 services:
-  jackrabbit:
+  jackrabbit-rpc-server:
     build: .
     environment:
       RABBIT_URL: 'amqp://rabbit'
+    entrypoint: ['node', 'examples/7-timeout-rpc/server']
+    restart: on-failure
+  jackrabbit-rpc-client:
+    build: .
+    environment:
+      RABBIT_URL: 'amqp://rabbit'
+    entrypoint: ['node', 'examples/7-timeout-rpc/client']
     restart: on-failure
   rabbit:
-    image: rabbitmq@sha256:437ea77f0651165726384bab7863578aee792805451badf712e71ebe8b68931b
+    image: rabbitmq:3.7.8-management-alpine
     ports:
-      - "5672:5672"
+      - "5673:5672"
+      - "15673:15672"
