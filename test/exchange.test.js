@@ -125,16 +125,38 @@ describe('exchange', () => {
 
         describe('with key bindings', () => {
 
-            let exchange;
+            it('does not create a reply queue by default', (done) => {
 
-            beforeEach((done) => {
+                const exchange = Exchange('test.topic.replyQueue', 'topic')
+                    .connect(connection);
 
-                exchange = Exchange('test.topic.bindings', 'topic')
-                    .connect(connection)
-                    .once('connected', done);
+                exchange.on('ready', () => {
+
+                    const channelWithReply = connection.connection.channels.filter((channel) => channel.channel.reply);
+                    Assert.lengthOf(channelWithReply, 0);
+                    done();
+                });
+            });
+
+            it('creates a reply queue if configured', (done) => {
+
+                const exchange = Exchange('test.topic.replyQueue', 'topic', { noReply: false })
+                    .connect(connection);
+
+                exchange.on('ready', () => {
+
+                    const channelWithReply = connection.connection.channels.filter((channel) => channel.channel.reply);
+                    Assert.lengthOf(channelWithReply, 1);
+                    Assert.exists(channelWithReply[0].channel.reply);
+                    done();
+                });
             });
 
             it('emits a "bound" event when all routing keys have been bound to the queue', (done) => {
+
+                const exchange = Exchange('test.topic.bindings', 'topic')
+                    .connect(connection)
+                    .once('connected', done);
 
                 const keys = 'abcdefghijklmnopqrstuvwxyz'.split('');
                 const finalKey = keys[keys.length - 1];

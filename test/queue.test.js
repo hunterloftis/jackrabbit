@@ -70,9 +70,12 @@ describe('queue', () => {
 
             queue.consume(onMessage, { noAck: true });
 
-            for (let i = 0; i < n; ++i) {
-                exchange.publish(message, { key: name });
-            }
+            queue.on('ready', () => {
+
+                for (let i = 0; i < n; ++i) {
+                    exchange.publish(message, { key: name });
+                }
+            });
         });
 
         it('calls back with ok', (done) => {
@@ -92,7 +95,10 @@ describe('queue', () => {
             const message = Uuid();
 
             queue.consume(onMessage, { noAck: true });
-            exchange.publish(message, { key: name });
+            queue.on('ready', () => {
+
+                exchange.publish(message, { key: name });
+            });
         });
     });
 
@@ -145,7 +151,7 @@ describe('queue', () => {
 
             name = `test.queue.purge`;
             queue = Queue({ name, durable: false, exclusive: true });
-            queue.on('connected', () => {
+            queue.on('ready', () => {
 
                 messageCount = 10;
                 for (let i = 0; i < messageCount; ++i) {
