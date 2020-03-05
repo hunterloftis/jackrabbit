@@ -14,6 +14,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
+      - name: Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
       - name: Install dependencies
         run: npm i
         env:
