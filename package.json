@@ -37,11 +37,13 @@
     "uuid": "3.x.x"
   },
   "devDependencies": {
+    "@pager/semantic-release-config": "1.x",
     "chai": "4.x.x",
     "eslint": "6.x.x",
     "eslint-config-hapi": "12.x.x",
     "eslint-plugin-hapi": "4.x.x",
-    "mocha": "7.x"
+    "mocha": "7.x",
+    "semantic-release": "17.x"
   },
   "mocha": {
     "bail": true,
@@ -50,5 +52,8 @@
   "scripts": {
     "test": "mocha",
     "lint": "eslint lib/** test/**"
+  },
+  "release": {
+    "extends": "@pager/semantic-release-config"
   }
 }
