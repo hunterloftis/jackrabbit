@@ -1,6 +1,6 @@
 {
   "name": "@pager/jackrabbit",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Easy RabbitMQ for node",
   "keywords": [
     "amqp",
