@@ -1,3 +1,5 @@
+## [5.0.5](https://github.com/pagerinc/jackrabbit/compare/v5.0.4...v5.0.5) (2020-03-08)
+
 ## [5.0.4](https://github.com/pagerinc/jackrabbit/compare/v5.0.3...v5.0.4) (2020-03-07)
 
 ## [5.0.3](https://github.com/pagerinc/jackrabbit/compare/v5.0.2...v5.0.3) (2020-03-06)
