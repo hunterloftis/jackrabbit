@@ -33,15 +33,15 @@
   ],
   "dependencies": {
     "amqplib": "0.5.x",
-    "lodash.assignin": "4.x.x",
-    "uuid": "3.x.x"
+    "lodash.assignin": "4.x",
+    "uuid": "3.x"
   },
   "devDependencies": {
     "@pager/semantic-release-config": "1.x",
-    "chai": "4.x.x",
-    "eslint": "6.x.x",
-    "eslint-config-hapi": "12.x.x",
-    "eslint-plugin-hapi": "4.x.x",
+    "chai": "4.x",
+    "eslint": "6.x",
+    "eslint-config-hapi": "12.x",
+    "eslint-plugin-hapi": "4.x",
     "mocha": "7.x",
     "semantic-release": "17.x"
   },
