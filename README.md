@@ -68,7 +68,7 @@ which map 1-to-1 with the official RabbitMQ tutorials.
 ## Installation
 
 ```
-npm install --save jackrabbit
+npm install --save @pager/jackrabbit
 ```
 
 ## Tests
