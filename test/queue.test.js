@@ -2,7 +2,7 @@
 
 const Assert = require('chai').assert;
 const Amqp = require('amqplib/callback_api');
-const Uuid = require('uuid/v4');
+const { v4: Uuid } = require('uuid');
 const Exchange = require('../lib/exchange');
 const Queue = require('../lib/queue');
 

@@ -3,7 +3,7 @@
 const Assert = require('chai').assert;
 const Amqp = require('amqplib/callback_api');
 const Exchange = require('../lib/exchange');
-const Uuid = require('uuid/v4');
+const { v4: Uuid } = require('uuid');
 
 const { afterEach, beforeEach, describe, it } = require('mocha');
 

@@ -34,7 +34,7 @@
   "dependencies": {
     "amqplib": "0.5.x",
     "lodash.assignin": "4.x",
-    "uuid": "3.x"
+    "uuid": "7.x"
   },
   "devDependencies": {
     "@pager/semantic-release-config": "1.x",
