@@ -1,3 +1,10 @@
+## [5.0.10](https://github.com/pagerinc/jackrabbit/compare/v5.0.9...v5.0.10) (2020-04-30)
+
+
+### Bug Fixes
+
+* verify if properties is null in msg ([#301](https://github.com/pagerinc/jackrabbit/issues/301)) ([5e8913c](https://github.com/pagerinc/jackrabbit/commit/5e8913c9b989b3fc32f6bb8202aa772d5d871493))
+
 ## [5.0.9](https://github.com/pagerinc/jackrabbit/compare/v5.0.8...v5.0.9) (2020-04-22)
 
 ## [5.0.8](https://github.com/pagerinc/jackrabbit/compare/v5.0.7...v5.0.8) (2020-03-09)
