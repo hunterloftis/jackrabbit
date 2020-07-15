@@ -1,0 +1,6 @@
+{
+    "exceptions": [
+        "https://npmjs.com/advisories/1500"
+    ]
+}
+

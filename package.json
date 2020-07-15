@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@pager/semantic-release-config": "1.x",
+    "audit-filter": "0.x",
     "chai": "4.x",
     "eslint": "6.x",
     "eslint-config-hapi": "12.x",
@@ -51,7 +52,8 @@
   },
   "scripts": {
     "test": "mocha",
-    "lint": "eslint lib/** test/**"
+    "lint": "eslint lib/** test/**",
+    "lint:deps": "npm audit --json | audit-filter --nsp-config=.nsprc --audit=-"
   },
   "release": {
     "extends": "@pager/semantic-release-config"

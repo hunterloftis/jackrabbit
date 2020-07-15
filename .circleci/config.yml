@@ -14,10 +14,6 @@ jobs:
     steps:
     - checkout
 
-    - run:
-        name: Audit dependencies
-        command: npm audit
-
     - restore_cache:
         keys:
         - v1-dependencies-{{ checksum "package.json" }}
@@ -26,6 +22,10 @@ jobs:
 
     - run: npm install
     - run: npm run lint
+    - run:
+        name: Audit dependencies
+        command: npm run lint:deps
+
     - run:
         name: Wait for RabbitMQ to receive connections
         command: dockerize -wait tcp://localhost:5672 -timeout 1m
