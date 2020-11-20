@@ -27,7 +27,7 @@
   "author": "Hunter Loftis <hunter@hunterloftis.com>",
   "license": "MIT",
   "dependencies": {
-    "amqplib": "^0.4.2",
+    "amqplib": "^0.5.4",
     "lodash": "^3.10.1",
     "uuid": "^3.3.2"
   },
@@ -36,6 +36,6 @@
     "mocha": "^2.2.5",
     "prettier": "1.13.7",
     "prettier-eslint-cli": "^4.7.1",
-    "release-it": "^7.4.7"
+    "release-it": "^7.6.3"
   }
 }
