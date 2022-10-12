@@ -34,6 +34,25 @@ function onMessage(data) {
 }
 ```
 
+## Set arguments in queue
+```js
+ 
+ rabbit
+  .default()
+  .queue({ name: 'hello', durable: true, arguments: {'x-expires':420000}  })
+   
+```
+other arguments:
+- x-max-length
+- x-max-length-bytes
+- x-overflow
+- x-dead-letter-exchange
+- x-dead-letter-routing-key
+- x-max-priority
+- x-queue-mode
+- x-queue-master-locator
+- x-message-ttl
+
 ## Ack/Nack Consumer Example
 
 ```js
