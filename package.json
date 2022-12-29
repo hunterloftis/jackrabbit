@@ -36,6 +36,6 @@
     "mocha": "^2.2.5",
     "prettier": "1.13.7",
     "prettier-eslint-cli": "^4.7.1",
-    "release-it": "^7.4.7"
+    "release-it": "^15.6.0"
   }
 }
